@@ -1,8 +1,8 @@
 import torch
 from utils.tools import prepare_text
 from scipy.io.wavfile import write
-from playsound import playsound as ps
 import time
+from subprocess import call
 
 print("Initializing TTS Engine...")
 
@@ -39,4 +39,4 @@ while(1):
         audio = audio.cpu().numpy().astype('int16')
         output_file = ('output.wav')
         write(output_file, 22050, audio)
-        ps('output.wav')
+        call(["aplay", "./output.wav"])
