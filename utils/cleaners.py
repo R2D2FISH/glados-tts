@@ -31,12 +31,19 @@ _abbreviations = [(re.compile('\\b%s\\.' % x[0], re.IGNORECASE), x[1]) for x in 
     ('ft', 'fort'),
 ]]
 
-
 def expand_abbreviations(text):
     for regex, replacement in _abbreviations:
         text = re.sub(regex, replacement, text)
     return text
 
+def expand_units(text):
+    text = text.replace("°C", "degrees selsius")
+    text = text.replace("°F", "degrees fahrenheit")
+    text = text.replace("°", "degrees")
+    text = text.replace("hPa", "hecto pascals")
+    text = text.replace("g/m³", "grams per cubic meter")
+    text = text.replace("% (RH)", "percent relative humidity")
+    return text
 
 def collapse_whitespace(text):
     return re.sub(_whitespace_re, ' ', text)
@@ -47,6 +54,7 @@ def no_cleaners(text):
 
 
 def english_cleaners(text):
+    text = expand_units(text)
     text = unidecode(text)
     text = normalize_numbers(text)
     text = expand_abbreviations(text)

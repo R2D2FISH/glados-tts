@@ -1,12 +1,5 @@
 # GLaDOS Text-to-speech (TTS) Voice Generator
-Neural network based TTS Engine modified to work with the [GLaDOS Voice Assistant](https://github.com/nerdaxic/glados-voice-assistant/).
-
-Install to working directory of the voice assistant with:
-```console
-cd ~
-cd glados-voice-assistant
-git submodule add https://github.com/nerdaxic/glados-tts.git glados_tts
-```
+Neural network based TTS Engine.
 
 If you want to just play around with the TTS, this works as stand-alone.
 ```console
