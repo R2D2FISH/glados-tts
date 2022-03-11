@@ -2,7 +2,11 @@ import torch
 from utils.tools import prepare_text
 from scipy.io.wavfile import write
 import time
-from subprocess import call
+from sys import modules as mod
+try:
+    import winsound
+except ImportError:
+    from subprocess import call
 
 print("Initializing TTS Engine...")
 
@@ -34,4 +38,7 @@ while(1):
         audio = audio.cpu().numpy().astype('int16')
         output_file = ('output.wav')
         write(output_file, 22050, audio)
-        call(["aplay", "./output.wav"])
+        if 'winsound' in mod:
+            winsound.PlaySound(output_file, winsound.SND_FILENAME)
+        else:
+            call(["aplay", "./output.wav"])
