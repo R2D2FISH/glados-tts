@@ -6,20 +6,15 @@ from subprocess import call
 
 print("Initializing TTS Engine...")
 
-glados = torch.jit.load('models/glados.pt')
-
 if torch.is_vulkan_available():
     device = 'vulkan'
-    vocoder = torch.jit.load('models/vocoder-gpu.pt')
 if torch.cuda.is_available():
     device = 'cuda'
-    vocoder = torch.jit.load('models/vocoder-gpu.pt')
 else:
     device = 'cpu'
-    vocoder = torch.jit.load('models/vocoder-cpu-hq.pt')
 
-glados.cpu()
-vocoder.to(device)
+glados = torch.jit.load('models/glados.pt')
+vocoder = torch.jit.load('models/vocoder-gpu.pt', map_location=device)
 
 while(1):
     text = input("Input: ")
@@ -31,7 +26,7 @@ while(1):
         tts_output = glados.generate_jit(x)
         print("Forward Tacotron took " + str((time.time() - old_time) * 1000) + "ms")
         old_time = time.time()
-        mel = tts_output['mel_post'].cpu()
+        mel = tts_output['mel_post'].to(device)
         audio = vocoder(mel)
         print("HiFiGAN took " + str((time.time() - old_time) * 1000) + "ms")
         audio = audio.squeeze()
