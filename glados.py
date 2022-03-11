@@ -20,6 +20,11 @@ else:
 glados = torch.jit.load('models/glados.pt')
 vocoder = torch.jit.load('models/vocoder-gpu.pt', map_location=device)
 
+for i in range(4):
+    init = glados.generate_jit(prepare_text(str(i)))
+    init_mel = init['mel_post'].to(device)
+    init_vo = vocoder(init_mel)
+
 while(1):
     text = input("Input: ")
 
