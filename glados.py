@@ -2,24 +2,28 @@ import torch
 from utils.tools import prepare_text
 from scipy.io.wavfile import write
 import time
-from subprocess import call
+from sys import modules as mod
+try:
+    import winsound
+except ImportError:
+    from subprocess import call
 
 print("Initializing TTS Engine...")
 
-glados = torch.jit.load('models/glados.pt')
-
 if torch.is_vulkan_available():
     device = 'vulkan'
-    vocoder = torch.jit.load('models/vocoder-gpu.pt')
 if torch.cuda.is_available():
     device = 'cuda'
-    vocoder = torch.jit.load('models/vocoder-gpu.pt')
 else:
     device = 'cpu'
-    vocoder = torch.jit.load('models/vocoder-cpu-hq.pt')
 
-glados.cpu()
-vocoder.to(device)
+glados = torch.jit.load('models/glados.pt')
+vocoder = torch.jit.load('models/vocoder-gpu.pt', map_location=device)
+
+for i in range(4):
+    init = glados.generate_jit(prepare_text(str(i)))
+    init_mel = init['mel_post'].to(device)
+    init_vo = vocoder(init_mel)
 
 while(1):
     text = input("Input: ")
@@ -31,7 +35,7 @@ while(1):
         tts_output = glados.generate_jit(x)
         print("Forward Tacotron took " + str((time.time() - old_time) * 1000) + "ms")
         old_time = time.time()
-        mel = tts_output['mel_post'].cpu()
+        mel = tts_output['mel_post'].to(device)
         audio = vocoder(mel)
         print("HiFiGAN took " + str((time.time() - old_time) * 1000) + "ms")
         audio = audio.squeeze()
@@ -39,4 +43,7 @@ while(1):
         audio = audio.cpu().numpy().astype('int16')
         output_file = ('output.wav')
         write(output_file, 22050, audio)
-        call(["aplay", "./output.wav"])
+        if 'winsound' in mod:
+            winsound.PlaySound(output_file, winsound.SND_FILENAME)
+        else:
+            call(["aplay", "./output.wav"])
