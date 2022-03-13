@@ -39,6 +39,8 @@ def expand_abbreviations(text):
 def expand_units(text):
     text = text.replace("°C", "degrees selsius")
     text = text.replace("°F", "degrees fahrenheit")
+    text = text.replace("°c", "degrees selsius")
+    text = text.replace("°f", "degrees fahrenheit")
     text = text.replace("°", "degrees")
     text = text.replace("hPa", "hecto pascals")
     text = text.replace("g/m³", "grams per cubic meter")

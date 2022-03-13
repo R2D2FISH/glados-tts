@@ -11,7 +11,7 @@ import time
 
 sys.path.insert(0, os.getcwd()+'/glados_tts')
 
-print("Initializing TTS Engine...")
+print("\033[1;94mINFO:\033[;97m Initializing TTS Engine...")
 
 # Select the device
 if torch.is_vulkan_available():
@@ -42,13 +42,11 @@ def glados_tts(text):
         # Generate generic TTS-output
         old_time = time.time()
         tts_output = glados.generate_jit(x)
-        print("Forward Tacotron took " + str((time.time() - old_time) * 1000) + "ms")
 
         # Use HiFiGAN as vocoder to make output sound like GLaDOS
-        old_time = time.time()
         mel = tts_output['mel_post'].to(device)
         audio = vocoder(mel)
-        print("HiFiGAN took " + str((time.time() - old_time) * 1000) + "ms")
+        print("\033[1;94mINFO:\033[;97m The audio sample took " + str(round((time.time() - old_time) * 1000)) + " ms to generate.")
 
         # Normalize audio to fit in wav-file
         audio = audio.squeeze()
