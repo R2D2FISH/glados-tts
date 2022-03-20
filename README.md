@@ -12,9 +12,9 @@ python3 engine-remote.py
 ```
 
 Default port is 8124
-Be sure to update settings.env variable in your main GLados-voice-assistant directory:
+Be sure to update settings.env variable in your main Glados-voice-assistant directory:
 ```
-TTS_ENGINE_URL			= http://192.168.1.3:8124/synthesize/
+TTS_ENGINE_API			= http://192.168.1.3:8124/synthesize/
 ```
 
 
