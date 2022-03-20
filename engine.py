@@ -1,11 +1,11 @@
+import sys
+import os
+sys.path.insert(0, os.getcwd()+'/glados_tts')
+
 import torch
 from utils.tools import prepare_text
 from scipy.io.wavfile import write
 import time
-import sys
-import os
-
-sys.path.insert(0, os.getcwd()+'/glados_tts')
 		
 print("\033[1;94mINFO:\033[;97m Initializing TTS Engine...")
 
@@ -18,8 +18,12 @@ else:
 	device = 'cpu'
 
 # Load models
-glados = torch.jit.load('models/glados.pt')
-vocoder = torch.jit.load('models/vocoder-gpu.pt', map_location=device)
+if __name__ == "__main__":
+	glados = torch.jit.load('models/glados.pt')
+	vocoder = torch.jit.load('models/vocoder-gpu.pt', map_location=device)
+else:
+	glados = torch.jit.load('glados_tts/models/glados.pt')
+	vocoder = torch.jit.load('glados_tts/models/vocoder-gpu.pt', map_location=device)
 
 # Prepare models in RAM
 for i in range(4):
