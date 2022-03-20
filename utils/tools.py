@@ -9,3 +9,12 @@ def prepare_text(text: str)->str:
     cleaner = Cleaner('english_cleaners', True, 'en-us')
     tokenizer = Tokenizer()
     return torch.as_tensor(tokenizer(cleaner(text)), dtype=torch.int, device='cpu').unsqueeze(0)
+	
+# Check Local Cache
+def cleanTTSFile(line):
+	filename = "GLaDOS-tts-"+line.replace(" ", "-")
+	filename = filename.replace("!", "")
+	filename = filename.replace("°c", "degrees celcius")
+	filename = filename.replace(",", "")+".wav"
+
+	return filename
