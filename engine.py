@@ -73,6 +73,7 @@ if __name__ == "__main__":
 
 	from flask import Flask, request, send_file
 	import urllib.parse
+	import shutil
 	
 	print("\033[1;94mINFO:\033[;97m Initializing TTS Server...")
 	
@@ -95,20 +96,22 @@ if __name__ == "__main__":
 		
 			# Update access time. This will allow for routine cleanups
 			os.utime(file, None)
-			
+			print("\033[1;94mINFO:\033[;97m The audio sample sent from cache.")
 			return send_file(file)
 			
 		# Generate New Sample
 		key = str(time.time())[7:]
 		if(glados_tts(line, key)):
 			tempfile = os.getcwd()+'/audio/GLaDOS-tts-temp-output-'+key+'.wav'
-			return send_file(tempfile)
-			
+						
 			# If the line isn't too long, store in cache
 			if(len(line) < 200 and CACHE):
-				shutil.move(tempfile, filename)
+				shutil.move(tempfile, file)
 			else:
+				return send_file(tempfile)
 				os.remove(tempfile)
+				
+			return send_file(file)
 				
 		else:
 			return 'TTS Engine Failed'
