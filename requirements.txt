@@ -1,0 +1,5 @@
+torch
+phonemizer
+inflect
+unidecode
+scipy
