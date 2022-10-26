@@ -24,3 +24,16 @@ The initial, regular Tacotron model was trained first on LJSpeech, and then on a
 * The Forward Tacotron model was only trained on about 600 voice lines.
 * The HiFiGAN model was generated through transfer learning from the sample.
 * All models have been optimized and quantized.
+
+
+
+## Installation Instruction
+If you want to install the TTS Engine on your machine, please follow the steps
+below.
+
+1. Install the [`espeak`](https://github.com/espeak-ng/espeak-ng) synthesizer
+   according to the [installation
+   instructions](https://github.com/espeak-ng/espeak-ng/blob/master/docs/guide.md)
+   for your operating system.
+2. Install the required Python packages, e.g., by running `pip install -r
+   requirements.txt`
