@@ -10,6 +10,7 @@ except ImportError:
 
 print("Initializing TTS Engine...")
 
+vcfile = 'models/vocoder-gpu.pt'
 # Select the device
 if torch.is_vulkan_available():
     device = 'vulkan'
@@ -17,10 +18,11 @@ if torch.cuda.is_available():
     device = 'cuda'
 else:
     device = 'cpu'
+    vcfile = 'models/vocoder-cpu-hq.pt'
 
 # Load models
 glados = torch.jit.load('models/glados.pt')
-vocoder = torch.jit.load('models/vocoder-gpu.pt', map_location=device)
+vocoder = torch.jit.load(vcfile, map_location=device)
 
 # Prepare models in RAM
 for i in range(4):
@@ -61,4 +63,7 @@ while(1):
         if 'winsound' in mod:
             winsound.PlaySound(output_file, winsound.SND_FILENAME)
         else:
-            call(["aplay", "./output.wav"])
+            try:
+                call(["aplay", "./output.wav"])
+            except FileNotFoundError:
+                call(["pw-play", "./output.wav"])
