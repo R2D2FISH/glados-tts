@@ -7,10 +7,11 @@ try:
     import winsound
 except ImportError:
     from subprocess import call
-
+    import os
+    os.environ['PHONEMIZER_ESPEAK_LIBRARY'] = 'C:\Program Files\eSpeak NG\libespeak-ng.dll'
+    os.environ['PHONEMIZER_ESPEAK_PATH'] = 'C:\Program Files\eSpeak NG\espeak-ng.exe'
 print("Initializing TTS Engine...")
 
-vcfile = 'models/vocoder-gpu.pt'
 # Select the device
 if torch.is_vulkan_available():
     device = 'vulkan'
@@ -18,14 +19,13 @@ if torch.cuda.is_available():
     device = 'cuda'
 else:
     device = 'cpu'
-    vcfile = 'models/vocoder-cpu-hq.pt'
 
 # Load models
 glados = torch.jit.load('models/glados.pt')
-vocoder = torch.jit.load(vcfile, map_location=device)
+vocoder = torch.jit.load('models/vocoder-gpu.pt', map_location=device)
 
 # Prepare models in RAM
-for i in range(4):
+for i in range(2):
     init = glados.generate_jit(prepare_text(str(i)))
     init_mel = init['mel_post'].to(device)
     init_vo = vocoder(init_mel)
