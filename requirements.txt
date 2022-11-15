@@ -3,3 +3,5 @@ phonemizer
 inflect
 unidecode
 scipy
+torch
+flask

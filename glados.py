@@ -1,34 +1,21 @@
 import torch
-from utils.tools import prepare_text
+from utils.tools import getDevice, loadModels, prepare_text, configureEspeak, playAudio, warmupTorch, getOutputFile
 from scipy.io.wavfile import write
 import time
 from sys import modules as mod
-try:
-    import winsound
-except ImportError:
-    from subprocess import call
-    import os
-    os.environ['PHONEMIZER_ESPEAK_LIBRARY'] = 'C:\Program Files\eSpeak NG\libespeak-ng.dll'
-    os.environ['PHONEMIZER_ESPEAK_PATH'] = 'C:\Program Files\eSpeak NG\espeak-ng.exe'
-print("Initializing TTS Engine...")
+import os
 
-# Select the device
-if torch.is_vulkan_available():
-    device = 'vulkan'
-if torch.cuda.is_available():
-    device = 'cuda'
-else:
-    device = 'cpu'
+configureEspeak()
+
+print("Initializing TTS Engine...")
+device = getDevice()
 
 # Load models
-glados = torch.jit.load('models/glados.pt')
-vocoder = torch.jit.load('models/vocoder-gpu.pt', map_location=device)
+(glados, vocoder) = loadModels(device)
 
-# Prepare models in RAM
-for i in range(2):
-    init = glados.generate_jit(prepare_text(str(i)))
-    init_mel = init['mel_post'].to(device)
-    init_vo = vocoder(init_mel)
+print("Warming up...")
+warmupTorch(glados, device, vocoder)
+print("Warmup done...")
 
 while(1):
     text = input("Input: ")
@@ -53,17 +40,11 @@ while(1):
         audio = audio.squeeze()
         audio = audio * 32768.0
         audio = audio.cpu().numpy().astype('int16')
-        output_file = ('output.wav')
+        (output_file, output_file_old) = getOutputFile()
+        if os.path.exists(output_file):
+            os.rename(output_file, output_file_old)
         
         # Write audio file to disk
         # 22,05 kHz sample rate
         write(output_file, 22050, audio)
-
-        # Play audio file
-        if 'winsound' in mod:
-            winsound.PlaySound(output_file, winsound.SND_FILENAME)
-        else:
-            try:
-                call(["aplay", "./output.wav"])
-            except FileNotFoundError:
-                call(["pw-play", "./output.wav"])
+        playAudio(output_file)

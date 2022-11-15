@@ -3,19 +3,14 @@ import os
 sys.path.insert(0, os.getcwd()+'/glados_tts')
 
 import torch
-from utils.tools import prepare_text
+from utils.tools import getDevice, prepare_text, configureEspeak, playAudio, warmupTorch, getOutputFile
 from scipy.io.wavfile import write
 import time
 		
 print("\033[1;94mINFO:\033[;97m Initializing TTS Engine...")
 
 # Select the device
-if torch.is_vulkan_available():
-	device = 'vulkan'
-if torch.cuda.is_available():
-	device = 'cuda'
-else:
-	device = 'cpu'
+device = getDevice()
 
 # Load models
 if __name__ == "__main__":
@@ -26,10 +21,7 @@ else:
 	vocoder = torch.jit.load('glados_tts/models/vocoder-gpu.pt', map_location=device)
 
 # Prepare models in RAM
-for i in range(4):
-	init = glados.generate_jit(prepare_text(str(i)))
-	init_mel = init['mel_post'].to(device)
-	init_vo = vocoder(init_mel)
+warmupTorch(glados, device, vocoder)
 
 
 def glados_tts(text, key=False):
@@ -57,9 +49,11 @@ def glados_tts(text, key=False):
 		else:
 			output_file = ('audio/GLaDOS-tts-temp-output.wav')
 
+		print("1")
 		# Write audio file to disk
 		# 22,05 kHz sample rate 
 		write(output_file, 22050, audio)
+		print("2")
 
 	return True
 
