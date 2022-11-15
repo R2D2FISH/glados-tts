@@ -5,11 +5,11 @@ import time
 from sys import modules as mod
 try:
     import winsound
-except ImportError:
-    from subprocess import call
     import os
     os.environ['PHONEMIZER_ESPEAK_LIBRARY'] = 'C:\Program Files\eSpeak NG\libespeak-ng.dll'
     os.environ['PHONEMIZER_ESPEAK_PATH'] = 'C:\Program Files\eSpeak NG\espeak-ng.exe'
+except ImportError:
+    from subprocess import call
 print("Initializing TTS Engine...")
 
 # Select the device
