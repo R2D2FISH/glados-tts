@@ -3,25 +3,20 @@ import os
 sys.path.insert(0, os.getcwd()+'/glados_tts')
 
 import torch
-from utils.tools import getDevice, prepare_text, configureEspeak, playAudio, warmupTorch, getOutputFile
+from utils.tools import getDevice, loadModels, prepare_text, configureEspeak, playAudio, warmupTorch, getOutputFile
 from scipy.io.wavfile import write
 import time
 		
 print("\033[1;94mINFO:\033[;97m Initializing TTS Engine...")
 
-# Select the device
 device = getDevice()
 
 # Load models
-if __name__ == "__main__":
-	glados = torch.jit.load('models/glados.pt')
-	vocoder = torch.jit.load('models/vocoder-gpu.pt', map_location=device)
-else:
-	glados = torch.jit.load('glados_tts/models/glados.pt')
-	vocoder = torch.jit.load('glados_tts/models/vocoder-gpu.pt', map_location=device)
+(glados, vocoder) = loadModels(device)
 
-# Prepare models in RAM
-warmupTorch(glados, device, vocoder)
+print("Warming up...")
+warmupTorch(glados, device, vocoder, 4)
+print("Warmup done...")
 
 
 def glados_tts(text, key=False):

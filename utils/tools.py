@@ -45,10 +45,11 @@ def configureEspeak():
         os.environ['PHONEMIZER_ESPEAK_PATH'] = 'C:\Program Files\eSpeak NG\espeak-ng.exe'
 
 
-def warmupTorch(glados, device, vocoder):
-    init = glados.generate_jit(prepare_text(str(1)))
-    init_mel = init['mel_post'].to(device)
-    init_vo = vocoder(init_mel)
+def warmupTorch(glados, device, vocoder, count = 1):
+    for i in range(count):
+        init = glados.generate_jit(prepare_text(str(1)))
+        init_mel = init['mel_post'].to(device)
+        init_vo = vocoder(init_mel)
 
 
 def getOutputFile():
