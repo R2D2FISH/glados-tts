@@ -90,3 +90,27 @@ def loadJit(path, alternatePath, device = None):
         return torch.jit.load(alternatePath, map_location=device)
     else:
         print("Could not find model.")
+
+
+
+
+    # def load(self):
+    #     with open(self.path, 'r') as f:
+    #         for line in f:
+    #             if line.startswith('#'):
+    #                 continue
+    #             if '=' not in line:
+    #                 continue
+    #             key, value = line.split('=', 1)
+    #             self.config[key.strip()] = value.strip()
+
+    # def get(self, key):
+    #     return self.config[key]
+
+    # def set(self, key, value):
+    #     self.config[key] = value
+
+    # def save(self):
+    #     with open(self.path, 'w') as f:
+    #         for key, value in self.config.items():
+    #             f.write(f'{key}={value}

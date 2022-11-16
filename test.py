@@ -2,10 +2,31 @@ import os
 import argparse
 import hashlib
 
-# print(hashlib.md5("test".upper().encode('utf-8')).hexdigest())
-# print(hashlib.md5("Test".upper().encode('utf-8')).hexdigest())
+import sys
+import os
+import torch
+import utils.tools as tools
+from scipy.io.wavfile import write
+import time
+import hashlib
+import utils.ttsEngine as TTSEngine
+import wave
 
-# exit()
+engine = TTSEngine.TTSEngine()
+engine.warmup()
+
+while(1):
+    result = engine.generate("Hello World you are a nice person")
+    result.save("test.wav")
+    tools.playAudio("test.wav")
+    os.unlink("test.wav")
+
+    result = engine.generate("You are also quite intelligent")
+    result.save("test.wav")
+    tools.playAudio("test.wav")
+    os.unlink("test.wav")
+
+exit()
 
 parser = argparse.ArgumentParser(
                     prog = 'ProgramName',
@@ -42,6 +63,10 @@ if args.action == 'server':
 
 vars(args)
 
+tools.configureEspeak()
+device = tools.getDevice()
+(glados, vocoder) = tools.loadModels(device)
+tools.warmupTorch(glados, device, vocoder, 4)
 
 
 
