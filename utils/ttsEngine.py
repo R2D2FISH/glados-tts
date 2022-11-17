@@ -8,7 +8,7 @@ import torch
 from scipy.io.wavfile import write
 import time
 import hashlib
-
+import io
 
 class TTSEngine:
     def __init__(self):
@@ -61,6 +61,14 @@ class TTSResult:
 
     def save(self, filename):
         write(filename, 22050, self.audio)
+    
+    def asMemoryFile(self):
+        file_format = "WAV"
+        memory_file = io.BytesIO( )
+        memory_file.name = "audio.wav"
+        self.save(memory_file)
+        memory_file.seek(0)
+        return memory_file
 
     def play(self):
         tools.playAudio(self.audio)
@@ -69,3 +77,4 @@ class TTSResult:
         return  "Tacotron: " + str(self.tacotron_time_ms) + "ms, " +\
                 "HiFiGAN: " + str(self.hifi_time_ms) + "ms, " +\
                 "Finalize: " + str(self.finalize_time_ms) + "ms"
+
