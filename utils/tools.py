@@ -114,3 +114,11 @@ def loadJit(path, alternatePath, device = None):
     #     with open(self.path, 'w') as f:
     #         for key, value in self.config.items():
     #             f.write(f'{key}={value}
+
+def getInputText(args):
+    if args.input:
+        with open(args.input, 'r') as f:
+            generateText = f.read()
+    else:
+        generateText = ' '.join(args.text)
+    return generateText

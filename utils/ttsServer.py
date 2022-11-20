@@ -13,9 +13,10 @@ import io
 from scipy.io.wavfile import write
 
 class TTSServer:
-    def __init__(self, engine, port = 5000):
+    def __init__(self, engine, host = "127.0.0.1", port = 5000):
         self.engine = engine
         self.port = port
+        self.host = host
 
     def start(self):
         from flask import Flask, request
@@ -30,7 +31,7 @@ class TTSServer:
         
         cli = sys.modules['flask.cli']
         cli.show_server_banner = lambda *x: None
-        app.run(host="0.0.0.0", port=self.port)
+        app.run(host=self.host, port=self.port)
 
 
 

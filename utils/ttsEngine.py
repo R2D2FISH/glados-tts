@@ -10,6 +10,10 @@ import time
 import hashlib
 import io
 
+import pyaudio
+import wave
+import sys
+
 class TTSEngine:
     def __init__(self):
         tools.configureEspeak()
@@ -71,7 +75,26 @@ class TTSResult:
         return memory_file
 
     def play(self):
-        tools.playAudio(self.audio)
+        CHUNK = 1024
+        wf = wave.open(self.asMemoryFile(), 'rb')
+
+        p = pyaudio.PyAudio()
+
+        stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
+                        channels=wf.getnchannels(),
+                        rate=wf.getframerate(),
+                        output=True)
+
+        data = wf.readframes(CHUNK)
+
+        while len(data):
+            stream.write(data)
+            data = wf.readframes(CHUNK)
+
+        stream.stop_stream()
+        stream.close()
+
+        p.terminate()
 
     def __str__(self):
         return  "Tacotron: " + str(self.tacotron_time_ms) + "ms, " +\
