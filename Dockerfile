@@ -9,7 +9,7 @@ RUN mkdir /output
 
 ENV AUDIO_ENABLED=false
 
-EXPOSE 8124
+EXPOSE 5000
 
-CMD ["python", "./engine.py"] 
+CMD ["python", "./glados.py"] 
 

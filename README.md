@@ -37,3 +37,16 @@ below.
    for your operating system.
 2. Install the required Python packages, e.g., by running `pip install -r
    requirements.txt`
+
+## Building on docker 
+```console
+   docker build -t glados-tts .
+   docker run -it --rm -p 5000:5000 glados-tts serve --port 8124
+```
+
+# Development using docker
+```console
+   docker run -it --rm -p 5000:5000 -v Path/To/Your/Folder:/app glados-tts /bin/bash
+```
+Now you can edit the files in your folder and run the server from inside the container.
+Or you could attach vscode to the container and edit the files from there. The changes will be reflected in your folder.
