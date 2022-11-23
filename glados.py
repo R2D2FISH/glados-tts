@@ -52,11 +52,11 @@ serverParser.add_argument("--host", help='the host to run the server on', defaul
 
 # parser.add_argument('action', help = 'Action what should happen', choices = ['cli', 'cui', 'server'])
 
-# args, unknownargs = parser.parse_known_args(['serve','--port', '1234'])
+args, unknownargs = parser.parse_known_args(['serve','--port', '5000', '--host', '0.0.0.0'])
 # args, unknownargs = parser.parse_known_args(['say', '-i', 'input.txt' , "Hello world", "world hello!"])
 # args, unknownargs = parser.parse_known_args(['say',"Hello world","Hello world1"])
 # args, unknownargs = parser.parse_known_args(['gen', '-o', 'output.wav', "Hello world", "Hello world1"])
-args, unknownargs = parser.parse_known_args()
+# args, unknownargs = parser.parse_known_args()
 # args = parser.parse_args(['server'])
 
 if args.action is None:
@@ -72,7 +72,7 @@ print("Action: " + args.action)
 
 
 if args.action == 'serve':
-    print("Port: " + args.port)
+    print("Port: " + str(args.port))
     server = TTSServer.TTSServer(engine, args.host, args.port)
     server.start()
 

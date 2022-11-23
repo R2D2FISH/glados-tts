@@ -1,0 +1,1 @@
+docker run -it --rm -p 5000:5000 -v %CD%:/app -v%CD%/.vscode/extensions:/root/.vscode-server/extensions glados-tts /bin/bash
