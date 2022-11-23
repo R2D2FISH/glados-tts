@@ -1,3 +1,4 @@
+# ref https://docs.docker.com/compose/compose-file/#build
 services:
   # app:
   #   entrypoint:
@@ -13,7 +14,7 @@ services:
   app:
     build:
       context: .
-      target: builder
+      dockerfile: .\build\Dockerfile
     ports:
       - '5000:5000'
     volumes:
