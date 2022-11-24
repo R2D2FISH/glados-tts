@@ -1,21 +1,18 @@
 # ref https://docs.docker.com/compose/compose-file/#build
-services:
-  # app:
-  #   entrypoint:
-  #   - sleep
-  #   - infinity
-  #   image: docker/dev-environments-default:stable-1
-  #   init: true
-  #   volumes:
-  #   - type: bind
-  #     source: /var/run/docker.sock
-  #     target: /var/run/docker.sock
+# docker compose -f .\compose-dev.yaml up
 
+services:
   app:
-    build:
-      context: .
-      dockerfile: .\build\Dockerfile
+    image: jkamsker/glados-tts:latest
     ports:
       - '5000:5000'
     volumes:
-      - .:/app
+      - .:/com.docker.devenvironments.code # Docker dev env
+      - .:/src
+      - ./src:/app
+      - ./.vscode/extensions:/root/.vscode-server/extensions
+    working_dir: /src
+    # command: /bin/bash
+    entrypoint:
+    - sleep
+    - infinity
