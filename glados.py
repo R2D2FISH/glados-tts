@@ -60,6 +60,8 @@ while(1):
         # 22,05 kHz sample rate
         write(output_file, 22050, audio)
 
+        print(x)
+
         # Play audio file
         if 'winsound' in mod:
             winsound.PlaySound(output_file, winsound.SND_FILENAME)
