@@ -34,6 +34,9 @@ for i in range(2):
 while(1):
     text = input("Input: ")
 
+    # str format to add ,,, at the start and end
+    text = ",,, {} ,,,".format(text)
+    
     # Tokenize, clean and phonemize input text
     x = prepare_text(text).to('cpu')
 
@@ -59,8 +62,6 @@ while(1):
         # Write audio file to disk
         # 22,05 kHz sample rate
         write(output_file, 22050, audio)
-
-        print(x)
 
         # Play audio file
         if 'winsound' in mod:
