@@ -76,7 +76,7 @@ class tts_runner:
     def speak_one_line(self, audio, name: str):
         audio.export(name, format = "wav")
         if 'winsound' in mod:
-            winsound.PlaySound(name, winsound.SND_FILENAME, winsound.SND_ASYNC)
+            winsound.PlaySound(name, winsound.SND_FILENAME | winsound.SND_ASYNC)
         else:
             try:
                 subprocess.Popen(["play", name], **kwargs)
