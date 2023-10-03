@@ -130,4 +130,5 @@ if __name__ == "__main__":
     glados = tts_runner(False, True)
     while True:
         text = input("Input: ")
-        glados.speak(text, True)
+        if len(text) > 0:
+            glados.speak(text, True)
