@@ -18,7 +18,11 @@ TTS_ENGINE_API			= http://192.168.1.3:8124/synthesize/
 ```
 
 
-## Description
+## Training (New Model)
+The Tacotron and ForwardTacotron models were trained as multispeaker models on two datasets separated into three speakers. LJSpeech (13,100 lines), and then on the heavily modified version of the Ellen McClain dataset, separated into Portal 1 and 2 voices (with punctuation and corrections added manually). The lines from the end of Portal 1 after the cores get knocked off were counted as Portal 2 lines.
+
+
+## Training (Old Model)
 The initial, regular Tacotron model was trained first on LJSpeech, and then on a heavily modified version of the Ellen McClain dataset (all non-Portal 2 voice lines removed, punctuation added).
 
 * The Forward Tacotron model was only trained on about 600 voice lines.
