@@ -31,9 +31,6 @@ The initial, regular Tacotron model was trained first on LJSpeech, and then on a
 If you want to install the TTS Engine on your machine, please follow the steps
 below.
 
-1. Install the [`espeak`](https://github.com/espeak-ng/espeak-ng) synthesizer
-   according to the [installation
-   instructions](https://github.com/espeak-ng/espeak-ng/blob/master/docs/guide.md)
-   for your operating system.
+1. Download the model files from [`Google Drive`](https://drive.google.com/file/d/1TRJtctjETgVVD5p7frSVPmgw8z8FFtjD/view?usp=sharing) and unzip into the repo folder
 2. Install the required Python packages, e.g., by running `pip install -r
    requirements.txt`
