@@ -1,3 +1,4 @@
+import argparse
 import torch
 import numpy as np
 from utils.tools import prepare_text
@@ -14,7 +15,6 @@ try:
     import winsound
 except ImportError:
     from subprocess import call
-print("Initializing TTS Engine...")
 
 kwargs = {
     'stdout':subprocess.PIPE,
@@ -23,12 +23,12 @@ kwargs = {
 }
 
 class tts_runner:
-    def __init__(self, use_p1: bool=False, log: bool=False):
+    def __init__(self, model_dir, use_p1: bool=False, log: bool=False):
         self.log = log
         if use_p1:
-            self.emb = torch.load('models/emb/glados_p1.pt')
+            self.emb = torch.load(f'{model_dir}/emb/glados_p1.pt')
         else:
-            self.emb = torch.load('models/emb/glados_p2.pt')
+            self.emb = torch.load(f'{model_dir}/emb/glados_p2.pt')
         # Select the device
         if torch.cuda.is_available():
             self.device = 'cuda'
@@ -38,8 +38,8 @@ class tts_runner:
             self.device = 'cpu'
 
         # Load models
-        self.glados = torch.jit.load('models/glados-new.pt')
-        self.vocoder = torch.jit.load('models/vocoder-gpu.pt', map_location=self.device)
+        self.glados = torch.jit.load(f'{model_dir}/glados-new.pt')
+        self.vocoder = torch.jit.load(f'{model_dir}/vocoder-gpu.pt', map_location=self.device)
         for i in range(2):
             init = self.glados.generate_jit(prepare_text(str(i)), self.emb, 1.0)
             init_mel = init['mel_post'].to(self.device)
@@ -127,7 +127,15 @@ class tts_runner:
             time.sleep(time_left + delay)
 
 if __name__ == "__main__":
-    glados = tts_runner(False, True)
+    parser = argparse.ArgumentParser(description='TTS Runner')
+    parser.add_argument('--model_dir', type=str, default='models', help='Directory for the models')
+    parser.add_argument('--quiet', action='store_false', help='Disable logging')
+    args = parser.parse_args()
+
+    if args.quiet:
+        print("Initializing TTS Engine...")
+        
+    glados = tts_runner(args.model_dir, False, not args.quiet)
     while True:
         text = input("Input: ")
         if len(text) > 0:
