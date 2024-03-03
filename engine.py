@@ -3,7 +3,8 @@ import os
 import time
 from glados import tts_runner
 
-sys.path.insert(0, os.getcwd()+'/glados_tts')
+current_dir = os.getcwd()
+sys.path.insert(0, current_dir+'/glados_tts')
 		
 print("\033[1;94mINFO:\033[;97m Initializing TTS Engine...")
 
@@ -48,7 +49,7 @@ if __name__ == "__main__":
 		filename = filename.replace("!", "")
 		filename = filename.replace("°c", "degrees celcius")
 		filename = filename.replace(",", "")+".wav"
-		file = os.getcwd()+'/audio/'+filename
+		file = current_dir+'/audio/'+filename
 		
 		# Check for Local Cache
 		if(os.path.isfile(file)):
@@ -61,7 +62,7 @@ if __name__ == "__main__":
 		# Generate New Sample
 		key = str(time.time())[7:]
 		if(glados_tts(line, key)):
-			tempfile = os.getcwd()+'/audio/GLaDOS-tts-temp-output-'+key+'.wav'
+			tempfile = current_dir+'/audio/GLaDOS-tts-temp-output-'+key+'.wav'
 						
 			# If the line isn't too long, store in cache
 			if(len(line) < 200 and CACHE):
