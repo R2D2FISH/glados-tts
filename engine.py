@@ -1,13 +1,9 @@
 import sys
 import os
-sys.path.insert(0, os.getcwd()+'/glados_tts')
-
-import torch
-from utils.tools import prepare_text
-from scipy.io.wavfile import write
-import time
-
 from glados import tts_runner
+
+current_dir = os.getcwd()
+sys.path.insert(0, current_dir+'/glados_tts')
 		
 print("\033[1;94mINFO:\033[;97m Initializing TTS Engine...")
 
@@ -19,6 +15,9 @@ def glados_tts(text, key=False, alpha=1.0):
 		output_file = ('audio/GLaDOS-tts-temp-output-'+key+'.wav')
 	else:
 		output_file = ('audio/GLaDOS-tts-temp-output.wav')
+
+	# Ensure the directory exists
+	os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
 	glados.run_tts(text, alpha).export(output_file, format = "wav")
 	return True
@@ -32,6 +31,8 @@ if __name__ == "__main__":
 	CACHE = True
 
 	from flask import Flask, request, send_file
+	import threading
+	import time
 	import urllib.parse
 	import shutil
 	
@@ -49,7 +50,7 @@ if __name__ == "__main__":
 		filename = filename.replace("!", "")
 		filename = filename.replace("°c", "degrees celcius")
 		filename = filename.replace(",", "")+".wav"
-		file = os.getcwd()+'/audio/'+filename
+		file = current_dir+'/audio/'+filename
 		
 		# Check for Local Cache
 		if(os.path.isfile(file)):
@@ -62,20 +63,24 @@ if __name__ == "__main__":
 		# Generate New Sample
 		key = str(time.time())[7:]
 		if(glados_tts(line, key)):
-			tempfile = os.getcwd()+'/audio/GLaDOS-tts-temp-output-'+key+'.wav'
+			tempfile = current_dir+'/audio/GLaDOS-tts-temp-output-'+key+'.wav'
 						
 			# If the line isn't too long, store in cache
 			if(len(line) < 200 and CACHE):
 				shutil.move(tempfile, file)
 			else:
+				# Remove the temp file after 5 seconds
+				def remove_file():
+					time.sleep(5)
+					try:
+						os.remove(tempfile)
+					except Exception as error:
+						app.logger.error("Error removing or closing downloaded file handle", error)
+				threading.Thread(target=remove_file).start()
 				return send_file(tempfile)
-				os.remove(tempfile)
-				
 			return send_file(file)
-				
 		else:
 			return 'TTS Engine Failed'
 			
 	cli = sys.modules['flask.cli']
-	cli.show_server_banner = lambda *x: None
 	app.run(host="0.0.0.0", port=PORT)
