@@ -16,6 +16,9 @@ def glados_tts(text, key=False, alpha=1.0):
 	else:
 		output_file = ('audio/GLaDOS-tts-temp-output.wav')
 
+	# Ensure the directory exists
+	os.makedirs(os.path.dirname(output_file), exist_ok=True)
+
 	glados.run_tts(text, alpha).export(output_file, format = "wav")
 	return True
 
