@@ -1,13 +1,9 @@
 import sys
 import os
-sys.path.insert(0, os.getcwd()+'/glados_tts')
-
-import torch
-from utils.tools import prepare_text
-from scipy.io.wavfile import write
 import time
-
 from glados import tts_runner
+
+sys.path.insert(0, os.getcwd()+'/glados_tts')
 		
 print("\033[1;94mINFO:\033[;97m Initializing TTS Engine...")
 
@@ -77,5 +73,6 @@ if __name__ == "__main__":
 			return 'TTS Engine Failed'
 			
 	cli = sys.modules['flask.cli']
-	cli.show_server_banner = lambda *x: None
+	# Hide server banner
+	os.environ['FLASK_ENV'] = 'production'
 	app.run(host="0.0.0.0", port=PORT)
