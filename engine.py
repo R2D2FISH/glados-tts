@@ -1,6 +1,5 @@
 import sys
 import os
-import time
 from glados import tts_runner
 
 current_dir = os.getcwd()
@@ -32,6 +31,8 @@ if __name__ == "__main__":
 	CACHE = True
 
 	from flask import Flask, request, send_file
+	import threading
+	import time
 	import urllib.parse
 	import shutil
 	
@@ -68,11 +69,16 @@ if __name__ == "__main__":
 			if(len(line) < 200 and CACHE):
 				shutil.move(tempfile, file)
 			else:
+				# Remove the temp file after 5 seconds
+				def remove_file():
+					time.sleep(5)
+					try:
+						os.remove(tempfile)
+					except Exception as error:
+						app.logger.error("Error removing or closing downloaded file handle", error)
+				threading.Thread(target=remove_file).start()
 				return send_file(tempfile)
-				os.remove(tempfile)
-				
 			return send_file(file)
-				
 		else:
 			return 'TTS Engine Failed'
 			
