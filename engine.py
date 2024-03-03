@@ -77,6 +77,4 @@ if __name__ == "__main__":
 			return 'TTS Engine Failed'
 			
 	cli = sys.modules['flask.cli']
-	# Hide server banner
-	os.environ['FLASK_ENV'] = 'production'
 	app.run(host="0.0.0.0", port=PORT)
