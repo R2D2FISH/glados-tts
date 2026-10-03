@@ -1,0 +1,4 @@
+# Extra packages for tools/distill (training the fast student vocoder)
+-r requirements-onnx.txt
+librosa>=0.10
+pyworld>=0.3.4

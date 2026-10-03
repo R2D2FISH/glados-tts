@@ -3,7 +3,8 @@
 Uses the models exported by tools/export_onnx.py. With the default 'hq' vocoder
 it sounds the same as glados.py and is 1.4-2x faster on CPU; it also runs on any ONNX
 Runtime provider (CPU, CUDA, CoreML, DirectML…). The 'lq' vocoder is 3-5x faster
-again but audibly worse (a fluttery, wet tone).
+again but audibly worse (a fluttery, wet tone). 'nsf' is the distilled student
+from tools/distill (see README), once you have trained and exported one.
 
     python tools/export_onnx.py            # once
     python glados_onnx.py "The cake is a lie."
@@ -29,7 +30,7 @@ class GladosONNX:
         if threads:
             opts.intra_op_num_threads = threads
         providers = providers or ['CPUExecutionProvider']
-        voc_file = {'lq': 'vocoder-lq.onnx', 'hq': 'vocoder.onnx'}[vocoder]
+        voc_file = {'lq': 'vocoder-lq.onnx', 'hq': 'vocoder.onnx', 'nsf': 'vocoder-nsf.onnx'}[vocoder]
         self.tacotron = ort.InferenceSession(os.path.join(model_dir, 'glados.onnx'), opts, providers=providers)
         self.vocoder = ort.InferenceSession(os.path.join(model_dir, voc_file), opts, providers=providers)
         self.speaker = np.fromfile(os.path.join(model_dir, f'speaker_{voice}.bin'), dtype=np.float32).reshape(1, 256)
@@ -67,7 +68,7 @@ if __name__ == '__main__':
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('text', nargs='?', default='Hello, and again, welcome to the Aperture Science computer-aided enrichment center.')
     ap.add_argument('-o', '--output', default='output.wav')
-    ap.add_argument('--vocoder', choices=['hq', 'lq'], default='hq')
+    ap.add_argument('--vocoder', choices=['hq', 'lq', 'nsf'], default='hq')
     ap.add_argument('--voice', choices=['p1', 'p2'], default='p2')
     ap.add_argument('--speed', type=float, default=1.0, help='>1 is faster speech')
     ap.add_argument('--threads', type=int, default=None)

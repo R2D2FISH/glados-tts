@@ -9,7 +9,10 @@ export const MODEL_FILES = {
   tacotron: 'glados-fp16.onnx',
   phonemizer: 'phonemizer-int8.onnx',
   phonemizerDict: 'phonemizer.json',
-  vocoder: { lq: 'vocoder-lq.onnx', hq: 'vocoder.onnx', 'lq-fp16': 'vocoder-lq-fp16.onnx', 'hq-fp16': 'vocoder-fp16.onnx' },
+  vocoder: {
+    lq: 'vocoder-lq.onnx', hq: 'vocoder.onnx', nsf: 'vocoder-nsf.onnx',
+    'lq-fp16': 'vocoder-lq-fp16.onnx', 'hq-fp16': 'vocoder-fp16.onnx', 'nsf-fp16': 'vocoder-nsf-fp16.onnx',
+  },
   speaker: { p1: 'speaker_p1.bin', p2: 'speaker_p2.bin' },
 };
 
@@ -65,7 +68,7 @@ export class GladosTTS {
    * @param {'webgpu'|'wasm'} opts.device   where the vocoder runs
    * @param {'webgpu'|'wasm'} [opts.tacotronDevice]  defaults to wasm: its GRU/LSTM
    *        layers have no WebGPU kernels, so running it on the GPU just adds copies
-   * @param {'lq'|'hq'} opts.vocoder
+   * @param {'hq'|'lq'|'nsf'} opts.vocoder
    * @param {(msg: string, frac: number) => void} [opts.onProgress]
    */
   static async create({ base = './onnx/', device = 'webgpu', tacotronDevice = 'wasm', vocoder = 'hq', onProgress } = {}) {

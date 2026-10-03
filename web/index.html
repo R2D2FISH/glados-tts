@@ -73,6 +73,7 @@
         <select id="vocoder">
           <option value="hq">High quality</option>
           <option value="lq">Fast (lower quality)</option>
+          <option value="nsf" hidden>Distilled (NSF)</option>
         </select>
       </label>
       <label>Voice
@@ -118,6 +119,12 @@ let tts = null, loadedKey = '', lastAudio = null, busy = false;
 const { available: gpu, f16 } = await webgpuInfo();
 $('backend').textContent = gpu ? `WebGPU available${f16 ? ' (fp16)' : ''}` : 'WebGPU unavailable: using CPU';
 if (!gpu) { $('device').value = 'wasm'; $('device').querySelector('[value=webgpu]').disabled = true; }
+// The distilled vocoder exists only once someone has trained and exported it.
+fetch(base + 'vocoder-nsf.onnx', { method: 'HEAD' }).then((r) => {
+  if (!r.ok) return;
+  $('vocoder').querySelector('[value=nsf]').hidden = false;
+  if (params.get('vocoder') === 'nsf') $('vocoder').value = 'nsf';
+}).catch(() => {});
 if (params.get('device')) $('device').value = params.get('device');
 if (params.get('vocoder')) $('vocoder').value = params.get('vocoder');
 $('speak').disabled = false;

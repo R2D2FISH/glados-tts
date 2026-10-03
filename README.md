@@ -56,6 +56,31 @@ python -m http.server 8000           # then visit http://localhost:8000/web/
 - WASM runs single-threaded unless the page is cross-origin isolated
   (`Cross-Origin-Opener-Policy: same-origin` + `Cross-Origin-Embedder-Policy: require-corp`).
 
+### Training a faster vocoder (distillation)
+`tools/distill/` trains a small NSF-style vocoder to imitate the HQ HiFi-GAN. A sine
+source with phase-continuous harmonics produces the pitch explicitly, so the student can't warble
+the way `lq` does. A small network shapes the rest. Its pitch comes from a tiny
+predictor reading the mel, so it is a drop-in mel to audio vocoder. No recordings are needed:
+ForwardTacotron + the HQ vocoder generate the training data.
+```console
+pip install -r requirements.txt -r requirements-distill.txt
+python -m tools.distill.make_dataset --num 30000 --out distill/data.pt   # teacher on GPU, ~6 GB
+python -m tools.distill.train --data distill/data.pt --out distill/run --preset small --amp
+python -m tools.distill.export distill/run/latest.pt                    # -> onnx/vocoder-nsf.onnx
+python glados_onnx.py "The cake is a lie." --vocoder nsf
+```
+Listen to `distill/run/samples/` as it trains (`teacher_*.wav` is the target).
+Training resumes from `latest.pt` if restarted. Speed of the presets (untrained
+weights; speed doesn't depend on training), 4.7 s of audio:
+
+| Vocoder | ONNX Runtime CPU, 1 thread | Browser WASM, 1 thread |
+|---|---|---|
+| `hq` | RTF 0.40 | RTF 1.61 |
+| `lq` | RTF 0.047 | RTF 0.135 |
+| NSF `base` (2.0M) | RTF 0.088 | RTF 0.278 |
+| NSF `small` (0.4M) | RTF 0.020 | RTF 0.045 |
+| NSF `tiny` (0.1M) | RTF 0.009 | RTF 0.018 |
+
 
 ## Training (New Model)
 The Tacotron and ForwardTacotron models were trained as multispeaker models on two datasets separated into three speakers. LJSpeech (13,100 lines), and then on the heavily modified version of the Ellen McClain dataset, separated into Portal 1 and 2 voices (with punctuation and corrections added manually). The lines from the end of Portal 1 after the cores get knocked off were counted as Portal 2 lines.

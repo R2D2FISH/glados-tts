@@ -114,6 +114,7 @@ class ForwardTacotron(nn.Module):
         self.register_buffer('step', torch.zeros(1, dtype=torch.long))
         self.pitch_strength = 1.0
         self.energy_strength = 1.0
+        self.pitch_shift = 0.0  # added to the normalized pitch (1.0 ~ 30 Hz); data augmentation only
 
     @staticmethod
     def length_regulate(x, dur):
@@ -133,6 +134,8 @@ class ForwardTacotron(nn.Module):
         # The original fills all durations with 2 when the total is <= 0.
         dur = torch.where(dur.long().sum() <= 0, torch.full_like(dur, 2.), dur)
         pitch = self.pitch_pred(x, semb, pitch_cond).transpose(1, 2)
+        if self.pitch_shift:
+            pitch = pitch + self.pitch_shift
         energy = self.energy_pred(x, semb).transpose(1, 2)
 
         h = self.prenet(self.embedding(x).transpose(1, 2))
