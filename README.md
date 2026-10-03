@@ -24,20 +24,19 @@ fully on-device in a browser (WebGPU, with a WebAssembly fallback for phones wit
 ```console
 pip install -r requirements.txt -r requirements-onnx.txt
 python tools/export_onnx.py          # writes onnx/ (~13 s)
-python glados_onnx.py "The cake is a lie." --vocoder lq
+python glados_onnx.py "The cake is a lie."
 ```
 
-Fastest config: ONNX Runtime + the small `lq` HiFi-GAN (recovered from
-`vocoder-cpu-lq.pt`, 1.5M params instead of 14M). Same sentence, 4.7 s of audio, CPU:
+Recommended config: ONNX Runtime + the `hq` HiFi-GAN (the default). The small `lq`
+vocoder (recovered from `vocoder-cpu-lq.pt`, 1.5M params instead of 14M) is much
+faster but has a noticeably fluttery, wet tone. Same sentence, 4.7 s of audio, CPU:
 
 | Config | 1 thread | 4 threads |
 |---|---|---|
 | stock `glados.py` | 2814 ms (RTF 0.59) | 1222 ms (RTF 0.26) |
 | + phonemizer loaded once (now the default) | 2277 ms | 677 ms |
-| ONNX Runtime, `hq` vocoder | 2030 ms | 624 ms |
-| **ONNX Runtime, `lq` vocoder** | **387 ms (RTF 0.08)** | **182 ms (RTF 0.04)** |
-
-`lq` is slightly buzzier than `hq`; use `--vocoder hq` when quality matters more than speed.
+| **ONNX Runtime, `hq` vocoder (default)** | **2030 ms (RTF 0.43)** | **624 ms (RTF 0.13)** |
+| ONNX Runtime, `lq` vocoder (`--vocoder lq`) | 387 ms (RTF 0.08) | 182 ms (RTF 0.04) |
 
 ### Browser demo
 `web/` is a static page that runs the whole pipeline (text normalization,
@@ -46,12 +45,14 @@ serve the repo root and open `/web/`:
 ```console
 python -m http.server 8000           # then visit http://localhost:8000/web/
 ```
-- It downloads ~90 MB (fp16 ForwardTacotron, int8 phonemizer, vocoder, dictionary),
+- It downloads ~110 MB with the `hq` vocoder (fp16 ForwardTacotron, int8 phonemizer, vocoder, dictionary),
   cached in the browser after the first visit. `?models=<url>/` loads them from
   another host (e.g. a Hugging Face repo). GitHub Pages can't serve Git LFS files.
 - The vocoder runs on WebGPU when available. fp16 weights are used only if the GPU
   supports `shader-f16`; otherwise fp32. ForwardTacotron runs on WASM because
   its GRU/LSTM layers have no WebGPU kernels.
+- On CPU-only (WASM) phones the `hq` vocoder is likely slower than real time;
+  the page offers `lq` as a fallback there.
 - WASM runs single-threaded unless the page is cross-origin isolated
   (`Cross-Origin-Opener-Policy: same-origin` + `Cross-Origin-Embedder-Policy: require-corp`).
 

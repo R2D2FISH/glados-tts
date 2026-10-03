@@ -16,7 +16,7 @@ export const MODEL_FILES = {
 const CACHE_NAME = 'glados-tts-models-v1';
 
 // Fetch with download progress, keeping a copy in the Cache API so repeat
-// visits (and offline use) skip the ~90 MB download.
+// visits (and offline use) skip the download (~110 MB with the hq vocoder).
 async function fetchBytes(url, onProgress) {
   let cache = null;
   try {
@@ -68,7 +68,7 @@ export class GladosTTS {
    * @param {'lq'|'hq'} opts.vocoder
    * @param {(msg: string, frac: number) => void} [opts.onProgress]
    */
-  static async create({ base = './onnx/', device = 'webgpu', tacotronDevice = 'wasm', vocoder = 'lq', onProgress } = {}) {
+  static async create({ base = './onnx/', device = 'webgpu', tacotronDevice = 'wasm', vocoder = 'hq', onProgress } = {}) {
     const ort = await import(ORT_URL);
     ort.env.wasm.numThreads = self.crossOriginIsolated ? Math.min(4, navigator.hardwareConcurrency || 1) : 1;
 

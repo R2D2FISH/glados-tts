@@ -1,8 +1,9 @@
 """Fast GLaDOS TTS on ONNX Runtime.
 
-Uses the models exported by tools/export_onnx.py. Compared with glados.py
-(TorchScript + the large HiFi-GAN), this is ~10x faster on CPU with the default
-'lq' vocoder and runs on any ONNX Runtime provider (CPU, CUDA, CoreML, DirectML…).
+Uses the models exported by tools/export_onnx.py. With the default 'hq' vocoder
+it sounds the same as glados.py and is 1.4-2x faster on CPU; it also runs on any ONNX
+Runtime provider (CPU, CUDA, CoreML, DirectML…). The 'lq' vocoder is 3-5x faster
+again but audibly worse (a fluttery, wet tone).
 
     python tools/export_onnx.py            # once
     python glados_onnx.py "The cake is a lie."
@@ -22,7 +23,7 @@ SAMPLE_RATE = 22050
 
 
 class GladosONNX:
-    def __init__(self, model_dir='onnx', vocoder='lq', voice='p2', threads=None, providers=None):
+    def __init__(self, model_dir='onnx', vocoder='hq', voice='p2', threads=None, providers=None):
         opts = ort.SessionOptions()
         opts.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
         if threads:
@@ -66,7 +67,7 @@ if __name__ == '__main__':
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('text', nargs='?', default='Hello, and again, welcome to the Aperture Science computer-aided enrichment center.')
     ap.add_argument('-o', '--output', default='output.wav')
-    ap.add_argument('--vocoder', choices=['lq', 'hq'], default='lq')
+    ap.add_argument('--vocoder', choices=['hq', 'lq'], default='hq')
     ap.add_argument('--voice', choices=['p1', 'p2'], default='p2')
     ap.add_argument('--speed', type=float, default=1.0, help='>1 is faster speech')
     ap.add_argument('--threads', type=int, default=None)
