@@ -2,4 +2,4 @@
 *.wav
 audio/*
 onnx/
-distill/
+/distill/
