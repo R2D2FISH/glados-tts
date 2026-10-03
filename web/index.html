@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GLaDOS TTS</title>
+<style>
+  :root {
+    --bg: #f4f4f1; --panel: #ffffff; --ink: #1d1f21; --muted: #6b6f73; --line: #dcdcd6;
+    --accent: #e8752a; --accent-ink: #ffffff; --ok: #2f8f5b; --err: #b3261e;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141516; --panel: #1d1f21; --ink: #e9e9e6; --muted: #9a9ea3; --line: #33363a;
+      --accent: #f08a45; --accent-ink: #141516; --ok: #5cc28c; --err: #ff8a80;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141516; --panel: #1d1f21; --ink: #e9e9e6; --muted: #9a9ea3; --line: #33363a;
+    --accent: #f08a45; --accent-ink: #141516; --ok: #5cc28c; --err: #ff8a80;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 720px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; letter-spacing: .02em; }
+  h1 span { color: var(--accent); }
+  .sub { color: var(--muted); margin: 0 0 20px; font-size: .9rem; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+  textarea { width: 100%; min-height: 110px; resize: vertical; font: inherit; color: var(--ink);
+    background: transparent; border: 1px solid var(--line); border-radius: 8px; padding: 10px; }
+  textarea:focus, select:focus, button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 12px; }
+  label { display: flex; flex-direction: column; gap: 4px; font-size: .8rem; color: var(--muted); }
+  select, input[type=range] { font: inherit; color: var(--ink); background: var(--panel);
+    border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; min-height: 36px; }
+  input[type=range] { padding: 0; accent-color: var(--accent); }
+  .row { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  button { font: inherit; font-weight: 600; border-radius: 8px; padding: 10px 18px; cursor: pointer;
+    border: 1px solid var(--line); background: var(--panel); color: var(--ink); min-height: 44px; }
+  button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); flex: 1; }
+  button:disabled { opacity: .5; cursor: default; }
+  #status { font-size: .85rem; color: var(--muted); margin-top: 10px; min-height: 1.5em; }
+  #status.err { color: var(--err); }
+  progress { width: 100%; height: 6px; accent-color: var(--accent); }
+  .stats { width: 100%; border-collapse: collapse; font-size: .82rem; font-variant-numeric: tabular-nums; }
+  .stats th, .stats td { text-align: right; padding: 4px 6px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  .stats th:first-child, .stats td:first-child { text-align: left; white-space: normal; }
+  .stats td.rtf { color: var(--ok); font-weight: 600; }
+  .stats td.rtf.slow { color: var(--err); }
+  .scroll { overflow-x: auto; }
+  .phon { font-size: .8rem; color: var(--muted); word-break: break-word; margin-top: 8px; }
+  .pill { display: inline-block; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--line); font-size: .75rem; color: var(--muted); }
+  footer { color: var(--muted); font-size: .8rem; }
+  footer code { font-size: .78rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>GLaDOS <span>TTS</span></h1>
+  <p class="sub">Runs entirely on your device with onnxruntime-web. <span id="backend" class="pill">detecting…</span></p>
+
+  <div class="card">
+    <textarea id="text" aria-label="Text to speak">Hello, and again, welcome to the Aperture Science computer-aided enrichment center. We hope your brief detention in the relaxation vault has been a pleasant one.</textarea>
+    <div class="controls">
+      <label>Compute
+        <select id="device">
+          <option value="webgpu">WebGPU</option>
+          <option value="wasm">CPU (WASM)</option>
+        </select>
+      </label>
+      <label>Vocoder
+        <select id="vocoder">
+          <option value="lq">Fast (1.5M params)</option>
+          <option value="hq">High quality (14M)</option>
+        </select>
+      </label>
+      <label>Voice
+        <select id="speaker">
+          <option value="p2">Portal 2</option>
+          <option value="p1">Portal 1</option>
+        </select>
+      </label>
+      <label>Speed <span id="speedv">1.00×</span>
+        <input id="speed" type="range" min="0.6" max="1.6" step="0.05" value="1">
+      </label>
+    </div>
+    <div class="row">
+      <button id="speak" class="primary" disabled>Load models</button>
+      <button id="save" disabled>Save WAV</button>
+    </div>
+    <progress id="prog" max="1" value="0" hidden></progress>
+    <div id="status" role="status"></div>
+  </div>
+
+  <div class="card scroll" id="statsCard" hidden>
+    <table class="stats">
+      <thead><tr><th>Sentence</th><th>Front-end</th><th>Tacotron</th><th>Vocoder</th><th>Audio</th><th>RTF</th></tr></thead>
+      <tbody id="stats"></tbody>
+    </table>
+    <div class="phon" id="phon"></div>
+  </div>
+
+  <footer>
+    RTF = synthesis time ÷ audio length (lower is faster; under 1 is faster than real time).
+    Models are cached after the first load. Load from another host with <code>?models=https://…/onnx/</code>.
+  </footer>
+</main>
+
+<script type="module">
+import { GladosTTS, webgpuInfo, encodeWav, SAMPLE_RATE } from './glados.js';
+
+const $ = (id) => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+const base = params.get('models') || '../onnx/';
+let tts = null, loadedKey = '', lastAudio = null, busy = false;
+
+const { available: gpu, f16 } = await webgpuInfo();
+$('backend').textContent = gpu ? `WebGPU available${f16 ? ' (fp16)' : ''}` : 'WebGPU unavailable: using CPU';
+if (!gpu) { $('device').value = 'wasm'; $('device').querySelector('[value=webgpu]').disabled = true; }
+if (params.get('device')) $('device').value = params.get('device');
+if (params.get('vocoder')) $('vocoder').value = params.get('vocoder');
+$('speak').disabled = false;
+
+const status = (msg, err = false) => { $('status').textContent = msg; $('status').classList.toggle('err', err); };
+$('speed').oninput = () => { $('speedv').textContent = (+$('speed').value).toFixed(2) + '×'; };
+const key = () => `${$('device').value}/${$('vocoder').value}`;
+const refreshButton = () => { if (!busy) $('speak').textContent = tts && key() === loadedKey ? 'Speak' : 'Load models'; };
+$('device').onchange = $('vocoder').onchange = refreshButton;
+
+async function ensureLoaded() {
+  if (tts && key() === loadedKey) return;
+  $('prog').hidden = false;
+  const t = performance.now();
+  tts = await GladosTTS.create({
+    base, device: $('device').value, vocoder: $('vocoder').value,
+    onProgress: (m, f) => { status(m); $('prog').value = f; },
+  });
+  loadedKey = key();
+  $('prog').hidden = true;
+  status(`Ready in ${((performance.now() - t) / 1000).toFixed(1)} s.`);
+}
+
+let ctx = null;
+async function speak() {
+  ctx ??= new AudioContext();
+  await ctx.resume();
+  const rows = $('stats');
+  rows.innerHTML = '';
+  $('statsCard').hidden = false;
+  $('phon').textContent = '';
+  const chunks = [];
+  let playAt = ctx.currentTime + 0.05, firstAudio = null;
+  const t0 = performance.now();
+  const opts = { speaker: $('speaker').value, speed: +$('speed').value };
+  let i = 0;
+  for await (const r of tts.stream($('text').value, opts)) {
+    i++;
+    if (!r.audio.length) continue;
+    firstAudio ??= performance.now() - t0;
+    const buf = ctx.createBuffer(1, r.audio.length, SAMPLE_RATE);
+    buf.copyToChannel(r.audio, 0);
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.connect(ctx.destination);
+    playAt = Math.max(playAt, ctx.currentTime + 0.02);
+    src.start(playAt);
+    playAt += buf.duration + 0.1;
+    chunks.push(r.audio, new Float32Array(Math.round(SAMPLE_RATE * 0.1)));
+    const t = r.timings;
+    const rtf = t.total / 1000 / t.seconds;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td></td><td>${t.frontend.toFixed(0)} ms</td><td>${t.tacotron.toFixed(0)} ms</td>
+      <td>${t.vocoder.toFixed(0)} ms</td><td>${t.seconds.toFixed(2)} s</td><td class="rtf${rtf > 1 ? ' slow' : ''}">${rtf.toFixed(3)}</td>`;
+    tr.firstChild.textContent = r.sentence;
+    rows.appendChild(tr);
+    $('phon').textContent += r.phonemes + ' ';
+  }
+  const total = chunks.reduce((n, c) => n + c.length, 0);
+  lastAudio = new Float32Array(total);
+  let off = 0;
+  for (const c of chunks) { lastAudio.set(c, off); off += c.length; }
+  $('save').disabled = !total;
+  status(firstAudio == null ? 'Nothing to say.' :
+    `First audio after ${firstAudio.toFixed(0)} ms · ${tts.device} · ${tts.vocoderName} vocoder`);
+}
+
+$('speak').onclick = async () => {
+  if (busy) return;
+  busy = true;
+  $('speak').disabled = true;
+  try {
+    await ensureLoaded();
+    $('speak').textContent = 'Speaking…';
+    await speak();
+  } catch (e) {
+    console.error(e);
+    status(String(e.message || e), true);
+    $('prog').hidden = true;
+  } finally {
+    busy = false;
+    $('speak').disabled = false;
+    refreshButton();
+  }
+};
+
+$('save').onclick = () => {
+  if (!lastAudio) return;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(encodeWav(lastAudio));
+  a.download = 'glados.wav';
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+};
+</script>
+</body>
+</html>

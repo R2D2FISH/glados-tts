@@ -1,0 +1,4 @@
+# Extra packages for tools/export_onnx.py and glados_onnx.py
+onnx>=1.15
+onnxruntime>=1.17
+onnxscript

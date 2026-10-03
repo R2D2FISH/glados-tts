@@ -7,7 +7,13 @@ from utils.text.numbers import normalize_numbers
 from utils.text.symbols import phonemes_set
 
 from dp.phonemizer import Phonemizer
+from dp.preprocessing.text import LanguageTokenizer, Preprocessor, SequenceTokenizer
 import torch
+
+# torch>=2.6 defaults torch.load to weights_only=True; allow DeepPhonemizer's
+# tokenizer classes so its checkpoint still loads.
+if hasattr(torch.serialization, 'add_safe_globals'):
+    torch.serialization.add_safe_globals([Preprocessor, SequenceTokenizer, LanguageTokenizer, set])
 
 # Regular expression matching whitespace:
 _whitespace_re = re.compile(r'\s+')
