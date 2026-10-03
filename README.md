@@ -96,6 +96,33 @@ weights; speed doesn't depend on training), 4.7 s of audio:
 | NSF `tiny` (0.1M) | RTF 0.009 | RTF 0.018 |
 
 
+### Building a synthetic GLaDOS corpus (teacher → ForwardTacotron)
+`tools/corpus/` turns a big, GLaDOS-fine-tuned teacher model into a large clean
+dataset for training ForwardTacotron (explicit pitch) on GLaDOS alone:
+```console
+pip install -r requirements.txt -r requirements-corpus.txt
+python -m tools.corpus.build_text --out corpus/text.tsv --hours 60 --streets my_streets.txt
+python -m tools.corpus.generate --text corpus/text.tsv --out corpus/raw --teacher mymodule:MyTeacher
+python -m tools.corpus.filter --raw corpus/raw --reference glados_real/wavs --whisper small.en --utmos
+python -m tools.corpus.export --raw corpus/raw --out corpus/dataset \
+    --real-metadata glados_real/metadata.csv --real-wavs glados_real/wavs --nsf-data corpus/nsf_data.pt
+```
+- **build_text**: general sentences + navigation prompts (your street names), numbers and
+  times, phonemized with this repo's front-end (Hawaiian rules, `lexicon.txt`) and picked
+  greedily to cover as many phoneme pairs as possible.
+- **generate**: any teacher via `tools/corpus/teachers.py`: a Python class with
+  `synthesize(text, phonemes)`, or `--teacher command --cmd '... {text} ... {out}'`.
+  Phoneme-input teachers receive the Hawaiian pronunciations. Resumable; `--takes N` renders
+  several versions so the filter can keep the best.
+- **filter**: per clip Whisper word errors (Hawaiian words excluded), speaker similarity
+  to the real lines, GLaDOS pitch level/spread, speaking rate, long pauses, clipping and
+  optional UTMOS naturalness. It also reports how far the teacher sits from the real voice
+  overall. Results go to `scores.tsv`.
+- **export**: `metadata.csv` (`id|speaker|text`, the `ljspeech_multi` format) + `wavs/` for
+  ForwardTacotron, with synthetic clips as `glados_synth` and real lines as `glados_real`,
+  plus `--nsf-data` for the distilled vocoder.
+
+
 ## Training (New Model)
 The Tacotron and ForwardTacotron models were trained as multispeaker models on two datasets separated into three speakers. LJSpeech (13,100 lines), and then on the heavily modified version of the Ellen McClain dataset, separated into Portal 1 and 2 voices (with punctuation and corrections added manually). The lines from the end of Portal 1 after the cores get knocked off were counted as Portal 2 lines.
 

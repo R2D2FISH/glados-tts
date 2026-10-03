@@ -1,0 +1,5 @@
+# Extra packages for tools/corpus (synthetic corpus: generation, filtering, export)
+-r requirements-distill.txt
+faster-whisper
+resemblyzer
+jiwer
