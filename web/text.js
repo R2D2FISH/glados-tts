@@ -270,17 +270,113 @@ export class Phonemizer {
   }
 }
 
+// ---------------------------------------------------------------- utils/text/hawaiian.py
+const OKINA = 'ʔ';
+const OKINA_CHARS = "ʻ‘’'`";
+const MACRON = { 'ā': 'a', 'ē': 'e', 'ī': 'i', 'ō': 'o', 'ū': 'u' };
+const HAW_CONS = 'hklmnpw' + OKINA;
+const DIPHTHONGS = new Set(['ai', 'ae', 'ao', 'au', 'ei', 'eu', 'oi', 'ou', 'iu']);
+const HAW_WORD = /^(?:[hklmnpwʔ]?(?:[aeiou]|[āēīōū]))+$/;
+const SHORT = { a: ['ɑ', 'ə'], e: ['ɛ', 'ɛ'], i: ['iː', 'i'], o: ['oʊ', 'oʊ'], u: ['uː', 'u'] };
+const LONG = { a: 'ɑː', e: 'eɪ', i: 'iː', o: 'oʊ', u: 'uː' };
+const DIPH = { ai: 'aɪ', ae: 'aɪ', ao: 'aʊ', au: 'aʊ', ei: 'eɪ', eu: 'ɛu', oi: 'ɔɪ', ou: 'oʊ', iu: 'iu' };
+const FORCE_HAWAIIAN = new Set(('hawaii kamehameha waikiki kailua honolulu kona maui kauai oahu molokai hilo lahaina ' +
+  'kihei kaneohe manoa makaha waianae wahiawa haleiwa kapalua kaanapali kapaa lihue hana kahului wailuku aloha ' +
+  'mahalo pali punahou nuuanu moana kalakaua kuhio kapiolani liliuokalani kaimuki kahala aina ewa kakaako ' +
+  'kalihi moiliili makiki hauula laie kahuku pupukea ala').split(' '));
+
+export function hawNormalize(word) {
+  return [...word.normalize('NFC').toLowerCase()].map((c) => (OKINA_CHARS.includes(c) ? OKINA : c)).join('');
+}
+
+export function isHawaiian(word, englishDict) {
+  const w = hawNormalize(word);
+  if (!HAW_WORD.test(w)) return false;
+  if ([...w].some((c) => c in MACRON) || (w.includes(OKINA) && !w.startsWith(OKINA) && !w.endsWith(OKINA))) return true;
+  const plain = w.replaceAll(OKINA, '');
+  if (FORCE_HAWAIIAN.has(plain)) return true;
+  if (plain.length < 3) return false;
+  return !!englishDict && !Object.prototype.hasOwnProperty.call(englishDict, plain);
+}
+
+function hawSyllables(w) {
+  const syls = [];
+  let i = 0;
+  while (i < w.length) {
+    let onset = '';
+    if (HAW_CONS.includes(w[i])) onset = w[i++];
+    const c = w[i];
+    if (c in MACRON) { syls.push([onset, MACRON[c], true]); i += 1; }
+    else if (i + 1 < w.length && DIPHTHONGS.has(w.slice(i, i + 2))) { syls.push([onset, w.slice(i, i + 2), true]); i += 2; }
+    else { syls.push([onset, c, false]); i += 1; }
+  }
+  return syls;
+}
+
+function hawStress(syls) {
+  const s = new Array(syls.length).fill(0);
+  let i = syls.length - 1, first = true;
+  while (i >= 0) {
+    if (syls[i][2]) { s[i] = first ? 2 : 1; i -= 1; }
+    else if (i > 0 && !syls[i - 1][2]) { s[i - 1] = first ? 2 : 1; i -= 2; }
+    else { i -= 1; continue; }
+    first = false;
+  }
+  return s;
+}
+
+export function hawaiianToPhonemes(word) {
+  const syls = hawSyllables(hawNormalize(word));
+  const stress = hawStress(syls);
+  let out = '', prev = '';
+  syls.forEach(([onset, nuc, heavy], k) => {
+    if (onset === OKINA) { if (k > 0) out += OKINA; }
+    else if (onset === 'w') out += ['i', 'e'].includes(prev.slice(-1)) ? 'v' : 'w';
+    else if (onset) out += onset;
+    else if (prev) {
+      if (prev.slice(-1) === 'i' && nuc[0] !== 'i') out += 'j';
+      else if (prev.slice(-1) === 'u' && nuc[0] !== 'u') out += 'w';
+    }
+    if (nuc.length === 2) out += DIPH[nuc];
+    else if (heavy) out += LONG[nuc];
+    else out += SHORT[nuc][stress[k] ? 0 : 1];
+    prev = nuc;
+  });
+  return out;
+}
+
 // ---------------------------------------------------------------- prepare_text
-export async function textToPhonemes(text, phonemizer) {
+const SPECIAL_WORD = /[A-Za-zĀĒĪŌŪāēīōūʻ‘’'`]+/g;
+const QUOTES = "‘’'`";
+
+export async function textToPhonemes(text, phonemizer, { hawaiianNames = true, lexicon = {} } = {}) {
   if (!/[.?!]$/.test(text)) text += '.';
-  let t = englishCleaners(text);
-  t = await phonemizer.phonemize(t);
-  t = [...t].filter((c) => PHONEME_ID.has(c)).join('');
+  const english = async (seg) => (seg ? phonemizer.phonemize(englishCleaners(seg)) : '');
+  const parts = [];
+  let last = 0;
+  for (const m of text.matchAll(SPECIAL_WORD)) {
+    const word = m[0];
+    let a = 0, b = word.length;
+    while (a < b && QUOTES.includes(word[a])) a++;
+    while (b > a && QUOTES.includes(word[b - 1])) b--;
+    const core = word.slice(a, b);
+    if (!core) continue;
+    const key = hawNormalize(core);
+    let ph = null;
+    if (Object.prototype.hasOwnProperty.call(lexicon, key)) ph = lexicon[key];
+    else if (hawaiianNames && isHawaiian(core, phonemizer.dict)) ph = hawaiianToPhonemes(core);
+    if (ph === null) continue;
+    const start = m.index + a;
+    parts.push(await english(text.slice(last, start)), ph);
+    last = start + core.length;
+  }
+  parts.push(await english(text.slice(last)));
+  const t = [...parts.join('')].filter((c) => PHONEME_ID.has(c)).join('');
   return t.replace(/\s+/g, ' ').trim();
 }
 
-export async function textToTokens(text, phonemizer) {
-  const phonemes = await textToPhonemes(text, phonemizer);
+export async function textToTokens(text, phonemizer, opts) {
+  const phonemes = await textToPhonemes(text, phonemizer, opts);
   return { phonemes, ids: [...phonemes].map((c) => PHONEME_ID.get(c)) };
 }
 

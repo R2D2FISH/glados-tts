@@ -56,6 +56,20 @@ python -m http.server 8000           # then visit http://localhost:8000/web/
 - WASM runs single-threaded unless the page is cross-origin isolated
   (`Cross-Origin-Opener-Policy: same-origin` + `Cross-Origin-Embedder-Policy: require-corp`).
 
+### Hawaiian names and custom pronunciations
+Hawaiian words (street and place names) are read with Hawaiian rules instead of English
+spelling guesses (`utils/text/hawaiian.py`): ʻokina as a glottal stop, kahakō as long
+vowels, Hawaiian stress (ka-ˌme-ha-ˈme-ha), w as v after i/e, and glides between vowels.
+A word counts as Hawaiian if it has an ʻokina or kahakō, or if it is spelled only with
+Hawaiian letters in (C)V syllables and isn't an English dictionary word, so
+"Likelike" is Hawaiian but "like" and "home" stay English. Spellings with or without
+diacritics both work (`Kapiʻolani`, `Kapi'olani`, `Kapiolani`). Turn it off with
+`Cleaner(..., hawaiian_names=False)`.
+
+For anything the rules get wrong, add `word<TAB>phonemes` lines to `lexicon.txt`
+(phoneme symbols from `utils/text/symbols.py`). Entries override both the
+Hawaiian rules and the English phonemizer.
+
 ### Training a faster vocoder (distillation)
 `tools/distill/` trains a small NSF-style vocoder to imitate the HQ HiFi-GAN. A sine
 source with phase-continuous harmonics produces the pitch explicitly, so the student can't warble

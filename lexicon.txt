@@ -1,0 +1,8 @@
+# Pronunciation overrides, applied before the Hawaiian rules and the English
+# phonemizer. One entry per line: word<TAB>phonemes (IPA symbols from
+# utils/text/symbols.py; stress marks are not used by the model).
+# Matching ignores case; ʻokina variants (ʻ ‘ ’ ') are treated alike.
+#
+# Examples:
+# Nimitz	nɪmɪts
+# Hawaiʻi	həvaɪʔi
