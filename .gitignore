@@ -3,3 +3,4 @@
 audio/*
 onnx/
 /distill/
+/corpus/
