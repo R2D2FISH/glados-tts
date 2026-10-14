@@ -141,7 +141,9 @@ def generate(out_dir: Path, batches: int = 20, per_batch: int = 40, seed: int = 
 def _clean(text: str) -> List[str]:
     out = []
     for line in text.splitlines():
-        line = re.sub(r'^\s*(?:[-*•]|\d+[.)])\s*', '', line).strip().strip('"“”')
+        line = re.sub(r'^\s*(?:[-*•]|\d+[.)])\s*', '', line).strip()
+        if len(line) > 1 and line[0] in '"“' and line[-1] in '"”':     # whole line quoted
+            line = line[1:-1].strip()
         if len(line.split()) >= 2 and not line.startswith('#') and not re.search(r'[*_#<>\[\]{}|]', line):
             out.append(line)
     return out

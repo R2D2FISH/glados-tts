@@ -34,7 +34,8 @@ GB of RAM and some minutes. Hawaii takes seconds.
 ```bash
 python -m corpus osm --regions hawaii                 # download, harvest, tiles, routes
 python -m corpus osm --regions all                    # every region in config/regions.yaml
-python -m corpus prose-llm --batches 200              # optional, needs Claude API credentials
+python -m corpus prose-llm --batches 200              # optional: Sonnet 5.5 via your Claude Code login
+python -m corpus prose-llm --backend api              # or the Anthropic API (key or `ant auth login`)
 python -m corpus build --profiles eval,tiny,small,general --extra-dir ~/books
 python -m corpus render --manifest corpus_work/manifests/tiny.jsonl \
        --model path/to/your/epoch80.pt --shard 0/2    # run 1/2 in another process
@@ -51,7 +52,7 @@ Everything is written under `corpus_work/` (or the path given to `--work`):
 | `regions/<r>/names.tsv`, `refs.tsv` | every road name and ref with counts |
 | `regions/<r>/hawaiian_lexicon.tsv` | Hawaiian words: marked spelling, bare spelling, variants |
 | `regions/<r>/routes.jsonl` | raw Valhalla maneuvers, so text can be re-rendered without routing again |
-| `prose/*.txt` | Claude-written prose |
+| `prose/*.txt` | Claude-written prose (`prose-llm` appends and dedupes; a new `--seed` starts a new file) |
 | `phonemes.<hash>.jsonl` | frontend cache; a new hash appears when the frontend or lexicons change |
 | `manifests/{eval,tiny,small,general}.jsonl` | `utt, category, text, spoken, phonemes, alpha, est_sec, ...` |
 | `manifests/report.json` | hours and items per category, for the pool and for each profile |
