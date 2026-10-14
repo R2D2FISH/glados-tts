@@ -1,0 +1,91 @@
+# category: simple
+# tags: short
+Yes.
+No.
+Okay.
+Done.
+Ready.
+Hello.
+Goodbye.
+Thank you.
+You're welcome.
+Please wait.
+One moment.
+Got it.
+Understood.
+Cancelled.
+Confirmed.
+Starting now.
+Stopping.
+Paused.
+Resuming.
+Error.
+Try again.
+Not found.
+Loading.
+Almost there.
+Arrived.
+Ready when you are.
+Please repeat that.
+I didn't catch that.
+Say that again?
+Turn left.
+Turn right.
+Keep left.
+Keep right.
+Go straight.
+Make a U-turn.
+Recalculating.
+Rerouting.
+GPS signal lost.
+GPS signal restored.
+Route found.
+No route found.
+Starting navigation.
+Navigation ended.
+Destination ahead.
+You have arrived.
+Traffic ahead.
+Speed camera ahead.
+Road closed.
+Lane closed.
+Slow down.
+Toll road ahead.
+Low battery.
+Battery full.
+Charging.
+Volume up.
+Volume down.
+Muted.
+Lights on.
+Lights off.
+Door locked.
+Door unlocked.
+Timer set.
+Timer done.
+Alarm set.
+Alarm off.
+Good morning.
+Good afternoon.
+Good evening.
+Good night.
+Welcome back.
+Are you still there?
+Hello?
+Nice try.
+Wrong.
+Correct.
+Excellent.
+Interesting.
+Fascinating.
+How unfortunate.
+What a surprise.
+Oh, it's you.
+Please proceed.
+Test complete.
+Test failed.
+Next chamber.
+Stand by.
+Initializing.
+Shutting down.
+Goodbye, forever.

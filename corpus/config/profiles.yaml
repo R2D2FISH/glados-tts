@@ -1,0 +1,81 @@
+# Mix profiles for distillation. Each profile draws from the item pool by
+# category until it reaches `hours` of estimated teacher audio. Weights are
+# relative shares of audio duration, not item counts, so long prose passages
+# don't silently crowd out short nav prompts (or vice versa).
+#
+# Categories (assigned by the builders):
+#   nav_terse      app-style instructions ("In 0.3 mi, turn left onto Pali Hwy")
+#   nav_verbal     Valhalla's spoken instructions, full sentences
+#   hawaiian       Hawaiian street names in nav templates (strict + local forms)
+#   place_names    curated hard US names in short carrier sentences
+#   numbers        times, distances, addresses, exits, phone-style digits
+#   simple         short phrases, single words, confirmations
+#   prose          GLaDOS-tone passages and general narrative prose
+#   balanced       phonetically balanced sentences (Harvard/Arctic style)
+#   hard_text      heteronyms, acronyms, punctuation, questions, lists
+#   vocoder_stress sibilant/plosive/nasal-dense lines, long pauses, sustained vowels
+#
+# `alphas` renders the same item at several speaking rates; for a tiny student
+# this mostly teaches robustness, so keep it to the general profiles.
+
+profiles:
+  tiny:          # nav voice on a Pi Zero class device
+    hours: 6
+    alphas: [1.0]
+    weights:
+      nav_terse: 45
+      nav_verbal: 15
+      hawaiian: 12
+      place_names: 5
+      numbers: 10
+      simple: 5
+      prose: 3
+      balanced: 3
+      hard_text: 1
+      vocoder_stress: 1
+
+  small:         # nav-first but still conversational
+    hours: 12
+    alphas: [1.0]
+    weights:
+      nav_terse: 25
+      nav_verbal: 12
+      hawaiian: 10
+      place_names: 5
+      numbers: 8
+      simple: 5
+      prose: 20
+      balanced: 7
+      hard_text: 5
+      vocoder_stress: 3
+
+  general:       # general-purpose GLaDOS on a Pi 4/5
+    hours: 30
+    alphas: [0.9, 1.0, 1.1]
+    weights:
+      nav_terse: 6
+      nav_verbal: 6
+      hawaiian: 5
+      place_names: 3
+      numbers: 5
+      simple: 4
+      prose: 50
+      balanced: 10
+      hard_text: 8
+      vocoder_stress: 3
+
+  eval:          # fixed regression set: render every checkpoint/vocoder on this
+    items: 400
+    alphas: [1.0]
+    stratified: true
+    weights:
+      nav_terse: 1
+      nav_verbal: 1
+      hawaiian: 1
+      place_names: 1
+      numbers: 1
+      simple: 1
+      prose: 1
+      balanced: 1
+      hard_text: 1
+      vocoder_stress: 1

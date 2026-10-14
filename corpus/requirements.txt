@@ -1,0 +1,11 @@
+# corpus builder, on top of the repo's requirements.txt
+osmium>=4.0
+pyvalhalla>=3.5
+PyYAML>=6.0
+scipy>=1.10
+unidecode>=1.3
+deep-phonemizer>=0.0.19
+# optional: python -m corpus prose-llm
+# anthropic
+# tests
+# pytest

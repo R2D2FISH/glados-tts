@@ -1,0 +1,43 @@
+# category: vocoder_stress
+# tags: vocoder
+# Sibilants and fricatives (hiss, aliasing)
+Sixty-six sizzling sausages sit silently in the stainless steel sink.
+She sees the shiny ship's sharp shears shifting through the surf.
+Fifty fluffy feathers fell from the frosty fir tree.
+The thistle-sifter sifted a sieve of unsifted thistles.
+Swiss specialists specify sixteen six-sided cylinders.
+Soft whispers seep through the shuttered sashes.
+Thick thorny thistles thrive in the thawing thicket.
+Fish sauce, fresh cheese, and sixth-street sushi.
+# Plosives (bursts, pre-echo)
+Big black bugs bleed blue black blood.
+Pick up the paper packet, pat it, and put it back.
+Ted tied the tiny tent to the top of the truck.
+Kate keeps a cage of cackling geese in the garden.
+Bob bought a bag of brown bread and baked beans.
+# Nasals and liquids (smooth voicing, buzz)
+Many men may manage more money in the morning.
+Lily loves the lull of the lonely lullaby.
+Nine nimble gnomes nap near the noon moon.
+Roll the round rubber wheel around the rural road.
+# Vowels, glides and pitch movement
+Oh, ooh, aah, eee. How are you? Are you well? Why? Why not?
+Way, way, way over the yellow hollow willow.
+Ah. I see. Oh! Really? Mmm.
+Aaaaand we're back.
+Nooooo. Not again.
+# Silence and pauses (noise floor, breath)
+One. Two. Three. Four. Five.
+Wait. ... Wait. ... Now.
+Stop. ... Listen. ... Do you hear it?
+Okay.
+Hi.
+No.
+# Fast and slow content
+Go go go go go go go!
+Rapidly repeating ridiculously random robotic responses requires remarkable resilience.
+Slowly... very... slowly... lower... the... cube.
+# High-frequency heavy words in sequence
+Statistics, specifics, specifications, synthesis, systematically.
+Assistance, insistence, existence, persistence, resistance.
+Crisp crusts crackle crunchily.

@@ -1,0 +1,116 @@
+# Regions to route in. Each region is one Geofabrik extract (pbf_url) that is
+# built into its own Valhalla tile set, so you only pay RAM for one state at a
+# time. `bbox` (min_lon, min_lat, max_lon, max_lat) optionally restricts where
+# route endpoints are sampled, which is how a metro is picked out of a big
+# state without clipping the pbf. `routes` is the number of routes to sample.
+#
+# Pick a subset on the command line with --regions, e.g.
+#   python -m corpus routes --regions hawaii,utah_slc
+# Sizes are approximate .osm.pbf sizes at the time of writing.
+
+geofabrik: https://download.geofabrik.de/north-america/us
+
+regions:
+  hawaii:                 # ~20 MB. Exhaustive name harvest + routes on every island.
+    pbf: hawaii-latest.osm.pbf
+    routes: 3000
+    hawaiian: true
+  washington_puget:       # Puyallup, Sequim, Snoqualmie, Tukwila
+    pbf: washington-latest.osm.pbf
+    bbox: [-123.3, 46.9, -121.6, 48.2]
+    routes: 600
+  oregon_portland:
+    pbf: oregon-latest.osm.pbf
+    bbox: [-123.2, 45.3, -122.4, 45.7]
+    routes: 300
+  california_socal:       # "the 405", La Jolla, Los Feliz, Cahuenga
+    pbf: california-latest.osm.pbf
+    bbox: [-119.0, 32.5, -116.8, 34.4]
+    routes: 600
+  california_bay:
+    pbf: california-latest.osm.pbf
+    bbox: [-122.6, 37.2, -121.7, 38.1]
+    routes: 400
+  utah_slc:               # grid addresses: 500 South 700 East
+    pbf: utah-latest.osm.pbf
+    bbox: [-112.1, 40.5, -111.7, 40.85]
+    routes: 400
+  arizona_phoenix:
+    pbf: arizona-latest.osm.pbf
+    bbox: [-112.5, 33.2, -111.6, 33.8]
+    routes: 300
+  new_mexico:             # Spanish names, rural county roads
+    pbf: new-mexico-latest.osm.pbf
+    routes: 300
+  colorado_front_range:
+    pbf: colorado-latest.osm.pbf
+    bbox: [-105.3, 39.5, -104.6, 40.1]
+    routes: 300
+  texas_houston:          # FM roads, Loop/Spur/Beltway, feeder roads
+    pbf: texas-latest.osm.pbf
+    bbox: [-95.9, 29.4, -95.0, 30.2]
+    routes: 500
+  texas_hill_country:     # Ranch-to-Market roads, German place names
+    pbf: texas-latest.osm.pbf
+    bbox: [-99.3, 29.6, -97.6, 30.6]
+    routes: 300
+  oklahoma:
+    pbf: oklahoma-latest.osm.pbf
+    routes: 200
+  louisiana:              # Tchoupitoulas, Natchitoches, parish roads
+    pbf: louisiana-latest.osm.pbf
+    routes: 500
+  mississippi:
+    pbf: mississippi-latest.osm.pbf
+    routes: 200
+  tennessee_nashville:
+    pbf: tennessee-latest.osm.pbf
+    bbox: [-87.1, 35.9, -86.5, 36.4]
+    routes: 200
+  georgia_atlanta:
+    pbf: georgia-latest.osm.pbf
+    bbox: [-84.7, 33.5, -84.1, 34.1]
+    routes: 300
+  florida_miami:          # Spanish names, numbered NW/SW grid
+    pbf: florida-latest.osm.pbf
+    bbox: [-80.5, 25.5, -80.1, 26.0]
+    routes: 300
+  illinois_chicago:
+    pbf: illinois-latest.osm.pbf
+    bbox: [-88.1, 41.6, -87.5, 42.1]
+    routes: 400
+  wisconsin:              # Oconomowoc, Menomonee, Kinnickinnic
+    pbf: wisconsin-latest.osm.pbf
+    routes: 300
+  minnesota_twin_cities:
+    pbf: minnesota-latest.osm.pbf
+    bbox: [-93.5, 44.8, -92.9, 45.1]
+    routes: 200
+  michigan_detroit:       # Mile roads, Michigan lefts
+    pbf: michigan-latest.osm.pbf
+    bbox: [-83.6, 42.2, -82.9, 42.7]
+    routes: 200
+  pennsylvania_philly:    # Schuylkill, Passyunk, Wissahickon
+    pbf: pennsylvania-latest.osm.pbf
+    bbox: [-75.4, 39.85, -74.95, 40.15]
+    routes: 400
+  new_york_city:          # Houston St, Queens hyphenated addresses
+    pbf: new-york-latest.osm.pbf
+    bbox: [-74.1, 40.55, -73.7, 40.9]
+    routes: 600
+  massachusetts:          # Worcester, Natick, Gloucester, rotaries
+    pbf: massachusetts-latest.osm.pbf
+    routes: 500
+  maine:
+    pbf: maine-latest.osm.pbf
+    routes: 200
+  washington_dc:
+    pbf: district-of-columbia-latest.osm.pbf
+    routes: 200
+  alaska_anchorage:
+    pbf: alaska-latest.osm.pbf
+    bbox: [-150.1, 61.0, -149.6, 61.3]
+    routes: 150
+  montana:                # long rural highways
+    pbf: montana-latest.osm.pbf
+    routes: 150

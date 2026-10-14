@@ -1,0 +1,90 @@
+# category: hard_text
+# tags: heteronym, acronym, punctuation, question, list
+# Heteronyms
+I read the report yesterday, and today I will read it again.
+Please lead the subject to the room with the lead walls.
+The wind was too strong, so I had to wind the cable twice.
+Live subjects are preferred, though I can work with what does not live.
+A tear rolled down his face as he watched me tear up the contract.
+Record the result, because this could be a new world record.
+He plays bass guitar and fishes for bass on weekends.
+The dove dove into the bushes.
+Polish the brass before the Polish delegation arrives.
+Close the door; the exit is close.
+The invalid form made the patient feel like an invalid.
+I object to that object being placed on my desk.
+We must present the present at the present time.
+The farm was used to produce produce.
+They were too close to the door to close it.
+The insurance was invalid for the invalid.
+After a number of injections my jaw got number.
+Does he know where the does went?
+Please refuse to put the refuse in the wrong bin.
+The bandage was wound around the wound.
+Minute particles were measured every minute.
+# Acronyms and initialisms
+The FBI, the CIA, and NASA all declined to comment.
+Send the PDF to the HR department by EOD, ASAP.
+Set the GPS to the nearest ATM, then find a CVS.
+The CEO of IBM spoke at MIT about AI and IoT.
+Is the USB drive formatted as FAT32 or NTFS?
+Turn on the A/C and set the HVAC to auto.
+The DMV is open M through F, nine to five.
+# Punctuation and prosody
+Wait... did you hear that?
+Well, well, well. Look who decided to show up.
+No. No, no, no. Absolutely not.
+I said, "Do not press the button." You pressed the button.
+The results (all three of them) were disappointing.
+It was supposed to be simple — it was not.
+First, the cube; second, the button; third, the door.
+You have three options: stay, leave, or explode.
+Really? You thought that would work?
+Is it raining, or is that the sprinkler system?
+Do you want the red one or the blue one?
+Stop!
+Yes.
+Hmm.
+Okay, okay, okay!
+"Testing," she said, "is a privilege, not a right."
+Bring eggs, milk, flour, sugar, butter, vanilla, and a fire extinguisher.
+Item one: lasers. Item two: more lasers. Item three: see item one.
+HELLO? IS ANYONE THERE?
+Are... are you crying?
+# Numbers, dates and money
+The meeting is on March 3rd, 2027, at 10:30 a.m.
+That will be $14.99, plus tax.
+Call 555-0143 between 9 and 5.
+The temperature dropped to -12 degrees overnight.
+Approximately 3.14159 percent of you is useful.
+Version 2.0.1 was released on 12/25/2025.
+Population: 1,234,567. Area: 89.5 square miles.
+The 1990s were a decade. So were the 1890s.
+Chapter 11, verse 3, line 42.
+The score was 21 to 14 at the half.
+She finished 1st, he finished 2nd, and I finished 23rd.
+Room 101 is on the 4th floor.
+That is 50% off, which is still too much.
+# URLs, emails and symbols
+Visit example.com slash help for more information.
+Email support at example dot org.
+Press star, then pound, then 0.
+Use the hashtag "science".
+# Foreign words and names in English
+We had croissants at the café, then espresso and a crème brûlée.
+The tsunami reached the shore before the typhoon.
+She studied in Göttingen, Kraków, and São Paulo.
+Gesundheit. Déjà vu. Bon voyage.
+The menu offered gnocchi, pho, quinoa, and acai.
+Siobhan, Niamh and Saoirse arrived from Dublin.
+# Tongue twisters
+She sells seashells by the seashore.
+Peter Piper picked a peck of pickled peppers.
+Red lorry, yellow lorry, red lorry, yellow lorry.
+Unique New York, unique New York, you know you need unique New York.
+How much wood would a woodchuck chuck if a woodchuck could chuck wood?
+The sixth sick sheik's sixth sheep's sick.
+Irish wristwatch, Swiss wristwatch.
+Toy boat. Toy boat. Toy boat.
+# Very long sentence
+When you have finished reading this sentence, which is longer than strictly necessary, contains several clauses, a parenthetical aside (like this one), a list of things such as cubes, buttons, doors, and lasers, and at least one unnecessary digression about the history of the facility, its founders, and their questionable decisions regarding funding, safety, and lunch, please take a deep breath and proceed to the next chamber.

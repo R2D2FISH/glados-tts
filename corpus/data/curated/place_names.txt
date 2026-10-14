@@ -1,0 +1,192 @@
+# category: place_names
+# tags: placename
+# Hard-to-say US names. Each line: Name<TAB>kind<TAB>note (note is for humans).
+# kind = city | street | road | water | county | landmark; it picks the
+# carrier sentence ("Continue toward X", "Turn right onto X", ...).
+Puyallup	city	pyoo-AL-up
+Sequim	city	SKWIM
+Snoqualmie	city	sno-KWAL-mee
+Tukwila	city
+Issaquah	city
+Spokane	city	spo-KAN
+Yakima	city
+Willamette	water	will-AM-it
+Coeur d'Alene	city	kor-da-LANE
+Boise	city	BOY-see
+La Jolla	city	la HOY-a
+Los Feliz	street	los FEE-liz (local)
+Cahuenga Boulevard	street	ka-WENG-a
+Sepulveda Boulevard	street
+Tehachapi	city
+Lompoc	city	LOM-poke
+Vallejo	city	va-LAY-ho
+El Cerrito	city
+Ojai	city	OH-hi
+Rancho Cucamonga	city
+Gila Bend	city	HEE-la
+Tempe	city	tem-PEE
+Mesquite	city
+Albuquerque	city
+Tijeras	city
+Pojoaque	city	po-WAH-kee
+Española	city
+Santa Fe	city
+Mosca	city
+Pueblo	city
+Buena Vista	city	BYOO-na VIS-ta (Colorado)
+Salida	city	sa-LIE-da
+Louisville	city
+Versailles	city	ver-SALES (Kentucky)
+Cairo	city	KAY-ro (Illinois)
+Vienna	city	vy-EN-a (Georgia)
+Nevada	city	ne-VAY-da (Missouri)
+Milan	city	MY-lan (Tennessee)
+Berlin	city	BER-lin (local)
+Lima	city	LIE-ma (Ohio)
+Houston Street	street	HOW-ston (New York)
+Kosciuszko Street	street	kos-CHOOSH-ko
+Schuylkill Expressway	road	SKOO-kul
+Passyunk Avenue	street	PASH-unk
+Wissahickon Avenue	street
+Manayunk	city
+Conshohocken	city
+Bala Cynwyd	city	BAL-a KIN-wid
+Wilkes-Barre	city	WILKS-bair-ee
+Lancaster	city	LANG-kis-ter
+Worcester	city	WUSS-ter
+Gloucester	city	GLOSS-ter
+Leominster	city	LEM-in-ster
+Peabody	city	PEE-bid-ee
+Quincy	city	KWIN-zee (Massachusetts)
+Billerica	city	bill-RICK-a
+Natick	city
+Haverhill	city	HAY-vrill
+Scituate	city	SITCH-oo-it
+Woonsocket	city
+Pawtucket	city
+Narragansett	city
+Thames Street	street	THAMES (Connecticut)
+Bangor	city	BANG-gore
+Calais	city	CAL-us (Maine)
+Madawaska	city
+Skowhegan	city
+Tchoupitoulas Street	street	chop-a-TOO-lus
+Natchitoches	city	NAK-a-tish
+Thibodaux	city	TIB-a-doe
+Opelousas	city
+Plaquemines	county	PLAK-a-mins
+Atchafalaya	water	a-CHAF-a-LIE-a
+Burgundy Street	street	bur-GUN-dee (New Orleans)
+Calliope Street	street	CAL-ee-ope
+Melpomene Street	street	MEL-po-meen
+Natchez	city
+Biloxi	city	bi-LUX-ee
+Tupelo	city
+Pascagoula	city
+Okeechobee	water
+Kissimmee	city	ki-SIM-ee
+Withlacoochee	water
+Apalachicola	city
+Tallahassee	city
+Chattahoochee	water
+Ponce de Leon Avenue	street	PONTS de LEE-on (Atlanta)
+Peachtree Street	street
+Cherokee	county
+Ocmulgee	water
+Chattanooga	city
+Tullahoma	city
+Paducah	city
+Oconomowoc	city	o-KON-o-mo-wok
+Menomonee Falls	city
+Kinnickinnic Avenue	street
+Mukwonago	city
+Sheboygan	city
+Wauwatosa	city
+Waukesha	city
+Ashwaubenon	city
+Pewaukee	city
+Kalamazoo	city
+Ypsilanti	city
+Sault Ste. Marie	city	SOO saint ma-REE
+Gratiot Avenue	street	GRASH-it
+Charlevoix	city	SHAR-le-voy
+Mackinac Island	city	MAK-in-aw
+Des Plaines	city	des PLAINS
+Goethe Street	street	GO-thee (Chicago)
+Devon Avenue	street
+Wacker Drive	street
+Kedzie Avenue	street
+Pulaski Road	street	pa-LAS-kee
+Joliet	city
+Wayzata	city	why-ZET-a
+Edina	city
+Shakopee	city
+Mahtomedi	city
+Owatonna	city
+Duluth	city
+Sioux Falls	city
+Pierre	city	PEER
+Spearfish	city
+Cheyenne	city
+Laramie	city
+Butte	city	BYOOT
+Helena	city	HEL-en-a
+Kalispell	city
+Missoula	city
+Pocatello	city
+Moscow	city	MOS-ko (Idaho)
+Tooele	city	too-WILL-a
+Hurricane	city	HER-a-kin (Utah)
+Spanish Fork	city
+Kearns	city
+Weber County	county	WEE-ber
+Mesquite	city
+Pahrump	city
+Winnemucca	city
+Nome	city
+Talkeetna	city
+Kenai	city	KEE-nye
+Valdez	city	val-DEEZ
+Utqiagvik	city	oot-KEE-ah-vik
+Muskogee	city
+Okmulgee	city
+Tahlequah	city
+Waxahachie	city
+Mexia	city	ma-HAY-a
+Refugio	city	re-FURY-o
+Boerne	city	BUR-nee
+Gruene	city	GREEN
+Pflugerville	city	FLUGER-ville
+Manchaca	city	MAN-shack
+Guadalupe Street	street
+Burnet Road	street	BURN-it
+Kuykendahl Road	street	KIRK-en-doll
+Bissonnet Street	street
+San Jacinto	city	san ha-SIN-to
+Arkansas River	water	ar-KAN-zus (Kansas)
+Concord	city	CON-kurd
+Poughkeepsie	city	pa-KIP-see
+Schenectady	city
+Skaneateles	city	skinny-AT-las
+Canajoharie	city
+Cheektowaga	city
+Valatie	city	va-LAY-sha
+Kill Van Kull	water
+Rahway	city
+Weehawken	city
+Hoboken	city
+Secaucus	city
+Mahwah	city
+Absecon	city
+Cheesequake	city
+Bowie	city	BOO-ee (Maryland)
+Havre de Grace	city	HAV-er de grace
+Chincoteague	city
+Norfolk	city	NAW-fuk
+Staunton	city	STAN-ton
+Buchanan	city
+Wahiawā	city
+Kāneʻohe	city
+Waimānalo	city
+Honokaʻa	city
+Hāmākua	landmark
