@@ -5,7 +5,7 @@
     python -m corpus tiles    --regions hawaii               # Valhalla tiles
     python -m corpus routes   --regions hawaii [--n 500]     # sample routes
     python -m corpus osm      --regions hawaii               # fetch+harvest+tiles+routes
-    python -m corpus prose-llm --batches 50                  # optional: Claude-written prose
+    python -m corpus prose-llm --batches 50                  # optional: Claude-written prose (via Claude Code)
     python -m corpus build    --profiles eval,tiny,small,general
     python -m corpus render   --manifest corpus_work/manifests/tiny.jsonl --model models/glados-new.pt
     python -m corpus say "In 0.3 mi, turn L onto Kalanianaʻole Hwy" --nav
@@ -92,7 +92,8 @@ def cmd_osm(args):
 
 def cmd_prose_llm(args):
     from corpus.prose_llm import generate
-    path = generate(Path(args.work) / 'prose', batches=args.batches, per_batch=args.per_batch, seed=args.seed)
+    path = generate(Path(args.work) / 'prose', batches=args.batches, per_batch=args.per_batch, seed=args.seed,
+                    backend=args.backend, model=args.model, jobs=args.jobs)
     print(f'wrote {path}')
 
 
@@ -149,9 +150,12 @@ def main(argv=None):
     region_cmd('routes', cmd_routes, 'sample routes').add_argument('--n', type=int)
     region_cmd('osm', cmd_osm, 'fetch + harvest + tiles + routes').add_argument('--n', type=int)
 
-    p = sub.add_parser('prose-llm', help='generate original prose with the Claude API')
+    p = sub.add_parser('prose-llm', help='generate original prose with Claude (Claude Code or the API)')
+    p.add_argument('--backend', choices=['claude-code', 'api'], default='claude-code')
+    p.add_argument('--model', help='default: claude-sonnet-5-5 (claude-code), claude-opus-5-5 (api)')
     p.add_argument('--batches', type=int, default=20)
     p.add_argument('--per-batch', type=int, default=40)
+    p.add_argument('--jobs', type=int, default=2, help='batches in flight at once')
     p.set_defaults(fn=cmd_prose_llm)
 
     p = sub.add_parser('build', help='assemble pool and write profile manifests')
